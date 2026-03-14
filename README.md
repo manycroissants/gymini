@@ -1,0 +1,2 @@
+# gymini
+AI Personal Trainer

@@ -1280,6 +1280,7 @@
       <button onclick="switchPanel('history')">History</button>
       <button onclick="switchPanel('settings')">Settings</button>
     </nav>
+    <div id="save-indicator" style="font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.06em;white-space:nowrap;min-width:80px;text-align:right"></div>
     <div id="user-badge" style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--text3);letter-spacing:0.06em;white-space:nowrap;display:none"></div>
   </div>
 </header>
@@ -1595,6 +1596,7 @@ function freshState() {
     enabled: {},
     sessions: [],
     nextId: 1000,
+    deletedDefaults: [],  // IDs of built-in exercises the user has intentionally deleted
   };
 }
 
@@ -1602,35 +1604,98 @@ let state = null;
 
 // ─── SAVE / LOAD via SUPABASE ────────────────────────────────────────────────
 
-async function saveState() {
+// Save indicator helpers
+function showSaveIndicator(status) {
+  let el = document.getElementById('save-indicator');
+  if (!el) return;
+  if (status === 'saving') {
+    el.textContent = '● Saving…';
+    el.style.color = 'var(--text3)';
+  } else if (status === 'saved') {
+    el.textContent = '✓ Saved';
+    el.style.color = 'var(--accent3)';
+    setTimeout(() => { if (el.textContent === '✓ Saved') el.textContent = ''; }, 2000);
+  } else if (status === 'error') {
+    el.textContent = '⚠ Save failed — retrying…';
+    el.style.color = 'var(--danger)';
+  }
+}
+
+let _saveTimer = null;
+let _pendingSave = false;
+
+// Debounced save — batches rapid changes into one DB write
+function saveState() {
   if (!sbClient || !currentUser) return;
-
-  // Local cache for instant feedback
+  // Always write to local cache immediately (instant, offline-safe)
   try { localStorage.setItem(`gymini_state_${currentUser.id}`, JSON.stringify(state)); } catch(e) {}
+  // Debounce the remote save by 600ms
+  _pendingSave = true;
+  clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(() => _flushSave(), 600);
+}
 
-  const { error } = await sbClient.from('user_data').upsert({
+async function _flushSave(retries = 3) {
+  if (!_pendingSave || !sbClient || !currentUser) return;
+  _pendingSave = false;
+  showSaveIndicator('saving');
+
+  const payload = {
     user_id: currentUser.id,
     exercises: state.exercises,
     enabled: state.enabled,
     sessions: state.sessions,
     next_id: state.nextId,
-  }, { onConflict: 'user_id' });
+    deleted_defaults: state.deletedDefaults || [],
+  };
 
-  if (error) console.error('saveState error:', error.message);
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    const { error } = await sbClient.from('user_data')
+      .upsert(payload, { onConflict: 'user_id' });
+
+    if (!error) {
+      showSaveIndicator('saved');
+      return;
+    }
+
+    console.error(`saveState attempt ${attempt} failed:`, error.message);
+    if (attempt < retries) await new Promise(r => setTimeout(r, 800 * attempt));
+  }
+
+  // All retries failed — mark as error and re-queue
+  showSaveIndicator('error');
+  _pendingSave = true;
+  _saveTimer = setTimeout(() => _flushSave(), 5000); // retry in 5s
 }
 
 async function loadUserData() {
-  if (!supabase || !currentUser) return null;
+  if (!sbClient || !currentUser) return null;
 
+  // Try remote first
   const { data, error } = await sbClient
     .from('user_data')
-    .select('exercises, enabled, sessions, next_id, username, created_at')
+    .select('exercises, enabled, sessions, next_id, username, created_at, deleted_defaults')
     .eq('user_id', currentUser.id)
     .single();
 
+  if (!error && data) return data;
+
+  // PGRST116 = no rows found (new user) — not a real error
   if (error && error.code !== 'PGRST116') {
-    console.error('loadUserData error:', error.message);
-    return null;
+    console.error('loadUserData remote error:', error.message);
+    // Fall back to local cache
+    try {
+      const cached = localStorage.getItem(`gymini_state_${currentUser.id}`);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        console.warn('Using local cache as fallback');
+        toast('⚠ Using cached data — check your connection');
+        return { exercises: parsed.exercises, enabled: parsed.enabled,
+                 sessions: parsed.sessions, next_id: parsed.nextId,
+                 username: parsed._username || '', created_at: parsed._created_at || null,
+                 deleted_defaults: parsed.deletedDefaults || [] };
+      }
+    } catch(e) {}
   }
 
   return data || null;
@@ -1646,6 +1711,7 @@ async function createUserRecord(username) {
     enabled: initial.enabled,
     sessions: initial.sessions,
     next_id: initial.nextId,
+    deleted_defaults: [],
   });
   if (error) console.error('createUserRecord error:', error.message);
 }
@@ -1792,10 +1858,16 @@ async function enterApp() {
       _created_at: data.created_at || null,
     };
 
-    // Add any missing default exercises (never overwrite user edits)
+    // Restore deletedDefaults from DB
+    state.deletedDefaults = data.deleted_defaults || [];
+    const deletedSet = new Set(state.deletedDefaults);
+
+    // Only add missing default exercises that the user has NOT intentionally deleted
     const existingIds = new Set(state.exercises.map(e => e.id));
     DEFAULT_EXERCISES.forEach(def => {
-      if (!existingIds.has(def.id)) state.exercises.push({ ...def });
+      if (!existingIds.has(def.id) && !deletedSet.has(def.id)) {
+        state.exercises.push({ ...def });
+      }
       const ex = state.exercises.find(e => e.id === def.id);
       if (ex) delete ex.difficulty;
     });
@@ -2077,6 +2149,14 @@ function deleteExerciseFromModal() {
   if (btn.dataset.confirming === 'true') {
     // Second click — do the delete
     if (!modalEditId) return;
+    // If this is a built-in default exercise, remember it was deleted
+    const isDefault = DEFAULT_EXERCISES.some(d => d.id === modalEditId);
+    if (isDefault) {
+      if (!state.deletedDefaults) state.deletedDefaults = [];
+      if (!state.deletedDefaults.includes(modalEditId)) {
+        state.deletedDefaults.push(modalEditId);
+      }
+    }
     state.exercises = state.exercises.filter(e => e.id !== modalEditId);
     delete state.enabled[modalEditId];
     saveState();

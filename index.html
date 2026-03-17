@@ -1797,34 +1797,63 @@ async function _hasUserRecord() {
 async function loadUserData() {
   if (!sbClient || !currentUser) return null;
 
-  // Try remote first
-  const { data, error } = await sbClient
+  // Use a fresh authenticated client built directly from the current session token.
+  // This guarantees the Authorization header is set — avoids the race where
+  // the shared sbClient hasn't attached the JWT yet and .single() hangs silently.
+  const { data: { session } } = await sbClient.auth.getSession();
+  const accessToken = session?.access_token;
+  if (!accessToken) {
+    console.error('loadUserData: no access token available');
+    return null;
+  }
+
+  // Race the DB fetch against a 10s timeout
+  const fetchPromise = window.supabase
+    .createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      global: { headers: { Authorization: 'Bearer ' + accessToken } }
+    })
     .from('user_data')
     .select('exercises, enabled, sessions, next_id, username, created_at, deleted_defaults')
     .eq('user_id', currentUser.id)
-    .single();
+    .maybeSingle();
 
-  if (!error && data) return data;
+  const timeoutPromise = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error('loadUserData timed out after 10s')), 10000)
+  );
 
-  // PGRST116 = no rows found (new user) — not a real error
-  if (error && error.code !== 'PGRST116') {
-    console.error('loadUserData remote error:', error.message);
-    // Fall back to local cache
-    try {
-      const cached = localStorage.getItem(`gymini_state_${currentUser.id}`);
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        console.warn('Using local cache as fallback');
-        toast('⚠ Using cached data — check your connection');
-        return { exercises: parsed.exercises, enabled: parsed.enabled,
-                 sessions: parsed.sessions, next_id: parsed.nextId,
-                 username: parsed._username || '', created_at: parsed._created_at || null,
-                 deleted_defaults: parsed.deletedDefaults || [] };
-      }
-    } catch(e) {}
+  try {
+    const { data, error } = await Promise.race([fetchPromise, timeoutPromise]);
+
+    if (error) {
+      console.error('loadUserData error:', error.message, error.code);
+      // Fall back to local cache on error
+      return _loadFromCache();
+    }
+    if (data) return data;
+    return null; // No row yet (new user)
+
+  } catch (e) {
+    console.error('loadUserData exception:', e.message);
+    return _loadFromCache();
   }
+}
 
-  return data || null;
+function _loadFromCache() {
+  if (!currentUser) return null;
+  try {
+    const cached = localStorage.getItem('gymini_state_' + currentUser.id);
+    if (cached) {
+      const p = JSON.parse(cached);
+      console.warn('Using local cache as fallback');
+      return {
+        exercises: p.exercises, enabled: p.enabled,
+        sessions: p.sessions, next_id: p.nextId,
+        username: p._username || '', created_at: p._created_at || null,
+        deleted_defaults: p.deletedDefaults || []
+      };
+    }
+  } catch(e) {}
+  return null;
 }
 
 async function createUserRecord(username) {

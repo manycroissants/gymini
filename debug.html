@@ -131,22 +131,38 @@ sb.auth.onAuthStateChange(async (event, session) => {
   currentUserId = session.user.id;
   log('User ID: ' + currentUserId, 'info');
 
-  // Fetch user_data
-  log('Fetching user_data...', 'wait');
+  // Fetch user_data using session token directly (same fix as main app)
+  log('Fetching user_data using session access token...', 'wait');
   try {
-    const { data, error } = await sb.from('user_data')
+    const accessToken = session.access_token;
+    log('Access token present: ' + !!accessToken, accessToken ? 'ok' : 'err');
+
+    const authedClient = window.supabase.createClient(SB_URL, SB_KEY, {
+      global: { headers: { Authorization: 'Bearer ' + accessToken } }
+    });
+
+    const fetchPromise = authedClient.from('user_data')
       .select('exercises, enabled, sessions, next_id, username, created_at, deleted_defaults')
       .eq('user_id', currentUserId)
-      .single();
+      .maybeSingle();
+
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('TIMED OUT after 10s')), 10000)
+    );
+
+    const { data, error } = await Promise.race([fetchPromise, timeoutPromise]);
 
     if (error) {
-      log('user_data ERROR: ' + error.message + ' | code: ' + error.code + ' | hint: ' + error.hint, 'err');
+      log('user_data ERROR: ' + error.message + ' | code: ' + error.code, 'err');
+      return;
+    }
+    if (!data) {
+      log('user_data: NO ROW found — new user or RLS blocking', 'err');
       return;
     }
 
     log('user_data OK — exercises:' + (data.exercises?.length||0) + ' sessions:' + (data.sessions?.length||0), 'ok');
-    log('All connectivity checks PASSED', 'ok');
-    log('Click "Simulate enterApp()" to test the full app startup logic', 'info');
+    log('All checks PASSED — main app should work now', 'ok');
 
   } catch(e) {
     log('user_data EXCEPTION: ' + e.message, 'err');

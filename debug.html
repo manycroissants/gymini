@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gymini Debug</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  body { background:#0a0a0a; color:#f0f0f0; font-family:monospace; padding:20px; }
+  .step { padding:10px; margin:6px 0; border-radius:6px; font-size:13px; }
+  .ok   { background:#0a2a0a; border:1px solid #47ffb8; color:#47ffb8; }
+  .err  { background:#2a0a0a; border:1px solid #ff4747; color:#ff4747; }
+  .wait { background:#1a1a1a; border:1px solid #555;    color:#888; }
+  .info { background:#0a0a2a; border:1px solid #4488ff; color:#88aaff; }
+  h1 { color:#e8ff47; letter-spacing:4px; font-size:1.4rem; margin-bottom:20px; }
+  button { background:#e8ff47; color:#000; border:none; padding:10px 20px; border-radius:6px; cursor:pointer; font-weight:700; margin:4px; }
+  input  { background:#111; border:1px solid #333; color:#f0f0f0; padding:8px; border-radius:4px; width:260px; margin:4px; }
+</style>
+</head>
+<body>
+<h1>GYMINI — DEBUG</h1>
+<div id="log"></div>
+<div id="login-test" style="margin-top:20px;display:none">
+  <input id="email" type="email" placeholder="Email">
+  <input id="pass" type="password" placeholder="Password">
+  <button onclick="testLogin()">Test Login</button>
+</div>
+<button onclick="clearStorage()" style="background:#ff4747;margin-top:20px">Clear All Storage & Reload</button>
+
+<script>
+const SB_URL = 'https://zfugjdedlxcdjhbyrzth.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpmdWdqZGVkbHhjZGpoYnlyenRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyOTQ1MjcsImV4cCI6MjA4ODg3MDUyN30.IwcMrz3Rjoyf0TE7MpiclqVgoH99olTI139f0lUfcEw';
+
+function log(msg, type='wait') {
+  const d = document.createElement('div');
+  d.className = 'step ' + type;
+  d.textContent = new Date().toISOString().slice(11,23) + ' — ' + msg;
+  document.getElementById('log').appendChild(d);
+  console.log(msg);
+}
+
+function clearStorage() {
+  localStorage.clear();
+  sessionStorage.clear();
+  log('Storage cleared — reloading...', 'info');
+  setTimeout(() => location.reload(), 500);
+}
+
+async function testLogin() {
+  const email = document.getElementById('email').value;
+  const pass = document.getElementById('pass').value;
+  log('Testing login for: ' + email, 'wait');
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if (error) { log('Login error: ' + error.message, 'err'); return; }
+  log('Login OK — user: ' + data.user.id, 'ok');
+  await testUserData(data.user.id);
+}
+
+async function testUserData(userId) {
+  log('Fetching user_data for: ' + userId, 'wait');
+  const { data, error } = await sb.from('user_data')
+    .select('user_id, username, exercises, sessions')
+    .eq('user_id', userId)
+    .maybeSingle();
+  if (error) { log('user_data error: ' + error.message + ' (code: ' + error.code + ')', 'err'); return; }
+  if (!data) { log('user_data: NO ROW FOUND for this user', 'err'); return; }
+  log('user_data OK — exercises: ' + (data.exercises?.length||0) + ', sessions: ' + (data.sessions?.length||0), 'ok');
+}
+
+// ── Run diagnostics ───────────────────────────────────────────────────────────
+log('Step 1: Checking Supabase CDN loaded...', 'wait');
+if (!window.supabase) { log('ERROR: window.supabase not found — CDN failed to load', 'err'); }
+else { log('Supabase CDN loaded OK', 'ok'); }
+
+log('Step 2: Creating Supabase client...', 'wait');
+let sb;
+try {
+  sb = window.supabase.createClient(SB_URL, SB_KEY);
+  log('Client created OK', 'ok');
+} catch(e) {
+  log('Client creation failed: ' + e.message, 'err');
+}
+
+log('Step 3: Checking localStorage for existing session...', 'wait');
+const keys = Object.keys(localStorage).filter(k => k.includes('supabase') || k.includes('gymini'));
+if (keys.length === 0) {
+  log('localStorage: empty (no cached session)', 'info');
+} else {
+  keys.forEach(k => log('localStorage key: ' + k, 'info'));
+}
+
+log('Step 4: Registering onAuthStateChange listener...', 'wait');
+const authTimeout = setTimeout(() => {
+  log('TIMEOUT: onAuthStateChange never fired after 10s — this is the bug', 'err');
+  document.getElementById('login-test').style.display = 'block';
+}, 10000);
+
+sb.auth.onAuthStateChange(async (event, session) => {
+  clearTimeout(authTimeout);
+  log('onAuthStateChange fired — event: ' + event + ' | session: ' + (session ? 'YES (user: ' + session.user.id + ')' : 'NULL'), 
+      session ? 'ok' : 'info');
+  
+  if (session) {
+    log('Step 5: Session found — testing user_data fetch...', 'wait');
+    await testUserData(session.user.id);
+    log('All checks passed! The main app should work.', 'ok');
+    log('If main app still hangs, it is a code bug in gym-trainer.html not a connectivity issue.', 'info');
+  } else {
+    log('No active session — showing login test', 'info');
+    document.getElementById('login-test').style.display = 'block';
+  }
+});
+
+log('Waiting for onAuthStateChange...', 'wait');
+</script>
+</body>
+</html>

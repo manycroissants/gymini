@@ -1205,6 +1205,57 @@
     .plan-summary { grid-template-columns: repeat(4, 1fr); }
     .routine-exercise { grid-template-columns: auto 1fr auto auto; }
   }
+
+  /* ─── TIMETABLE ─────────────────────────────────────────────────── */
+  .tt-workout-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+  }
+  .tt-workout-card.is-today { border-color: var(--accent); }
+  .tt-workout-card.is-completed { border-color: var(--accent3); opacity: 0.7; }
+
+  .tt-date-badge {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+  }
+  .tt-status-pill {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid currentColor;
+  }
+  .tt-ex-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .tt-ex-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.75rem;
+    color: var(--text2);
+  }
+  .btn-complete {
+    background: rgba(232,255,71,0.1);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    border-radius: 10px;
+    padding: 9px 18px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-complete:hover { background: rgba(232,255,71,0.2); }
+
 </style>
 </head>
 <body>
@@ -1278,6 +1329,7 @@
       <button class="active" onclick="switchPanel('library')">Library</button>
       <button onclick="switchPanel('plan')">Plan</button>
       <button onclick="switchPanel('history')">History</button>
+      <button onclick="switchPanel('timetable')">Timetable</button>
       <button onclick="switchPanel('settings')">Settings</button>
     </nav>
     <div id="save-indicator" style="font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.06em;white-space:nowrap;min-width:80px;text-align:right"></div>
@@ -1443,6 +1495,70 @@
         <button class="btn btn-primary" onclick="saveFeedback()" style="margin-left:10px">Save Feedback</button>
       </div>
     </div>
+  </div>
+
+
+  <!-- TIMETABLE -->
+  <div id="panel-timetable" class="panel">
+    <div class="section-header">
+      <h2>Plan <span>Timetable</span></h2>
+      <p>Gymini auto-generates and emails your routines on schedule</p>
+    </div>
+
+    <!-- Enable toggle card -->
+    <div class="settings-section" style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:16px">
+      <div>
+        <div style="font-weight:600;font-size:1rem">Auto-Schedule</div>
+        <div style="font-size:0.8rem;color:var(--text2);margin-top:3px">Gymini will plan and email your workouts automatically</div>
+      </div>
+      <div id="tt-toggle" onclick="toggleTimetable()"
+        style="width:52px;height:28px;border-radius:14px;background:var(--surface3);border:1px solid var(--border);cursor:pointer;position:relative;transition:all 0.25s;flex-shrink:0">
+        <div id="tt-toggle-knob" style="position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--text3);transition:all 0.25s"></div>
+      </div>
+    </div>
+
+    <!-- Config card -->
+    <div class="settings-section" style="margin-bottom:16px" id="tt-config-card">
+      <div class="settings-label">Schedule Preferences</div>
+
+      <div class="grid-2" style="margin-bottom:20px">
+        <div>
+          <label style="font-size:0.75rem;color:var(--text2);display:block;margin-bottom:8px">Every how many days?</label>
+          <div style="display:flex;align-items:center;gap:12px">
+            <input id="tt-frequency" type="number" min="1" max="14" value="2"
+              style="width:80px;font-size:1.4rem;font-family:'Bebas Neue',sans-serif;text-align:center;padding:8px"
+              onchange="saveTimetableConfig()">
+            <span style="color:var(--text2);font-size:0.85rem">days between workouts</span>
+          </div>
+        </div>
+        <div>
+          <label style="font-size:0.75rem;color:var(--text2);display:block;margin-bottom:8px">Duration per session</label>
+          <div style="display:flex;align-items:center;gap:12px">
+            <input id="tt-duration" type="number" min="15" max="180" value="60"
+              style="width:80px;font-size:1.4rem;font-family:'Bebas Neue',sans-serif;text-align:center;padding:8px"
+              onchange="saveTimetableConfig()">
+            <span style="color:var(--text2);font-size:0.85rem">minutes</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <label style="font-size:0.75rem;color:var(--text2);display:block;margin-bottom:10px">
+          Muscle groups to include
+          <span style="color:var(--text3);margin-left:6px">(leave all unselected = use everything)</span>
+        </label>
+        <div id="tt-muscle-chips" class="muscle-chips"></div>
+      </div>
+    </div>
+
+    <!-- Next scheduled workout -->
+    <div id="tt-next-card" style="display:none" class="settings-section" style="margin-bottom:16px">
+      <div class="settings-label">Next Scheduled Workout</div>
+      <div id="tt-next-content"></div>
+    </div>
+
+    <!-- Upcoming + history list -->
+    <div id="tt-history-area"></div>
   </div>
 
   <!-- SETTINGS -->
@@ -1807,6 +1923,9 @@ async function handleLogout() {
   if (sbClient) await sbClient.auth.signOut();
   currentUser = null;
   state = null;
+  ttConfig = null;
+  ttWorkouts = [];
+  ttMuscles = [];
   // Clear per-user local cache
   try { if (userId) localStorage.removeItem(`gymini_state_${userId}`); } catch(e) {}
   showApp(false);
@@ -1964,6 +2083,7 @@ function switchPanel(id) {
   if (id === 'plan') renderPlan();
   if (id === 'history') renderHistory();
   if (id === 'settings') renderSettings();
+  if (id === 'timetable') renderTimetable();
 }
 
 function renderSettings() {
@@ -2790,6 +2910,248 @@ function saveFeedback() {
   closeFeedbackModal();
   renderHistory();
   toast('Feedback saved!');
+}
+
+
+// ─── TIMETABLE ───────────────────────────────────────────────────────────────
+
+const TT_MUSCLES = ['Chest','Back','Shoulders','Biceps','Triceps','Legs','Core','Glutes','Cardio'];
+
+let ttConfig = null;      // loaded from DB
+let ttMuscles = [];       // selected muscle filter
+let ttWorkouts = [];      // scheduled_workouts rows
+
+// ── Load config & workouts from Supabase ─────────────────────────────────────
+async function loadTimetable() {
+  if (!sbClient || !currentUser) return;
+
+  const [cfgRes, workRes] = await Promise.all([
+    sbClient.from('timetable_config')
+      .select('*')
+      .eq('user_id', currentUser.id)
+      .maybeSingle(),
+    sbClient.from('scheduled_workouts')
+      .select('*')
+      .eq('user_id', currentUser.id)
+      .order('scheduled_date', { ascending: false })
+      .limit(20),
+  ]);
+
+  ttConfig = cfgRes.data || null;
+  ttWorkouts = workRes.data || [];
+  ttMuscles = (ttConfig?.muscle_groups) || [];
+}
+
+// ── Save config to Supabase ───────────────────────────────────────────────────
+async function saveTimetableConfig() {
+  if (!sbClient || !currentUser) return;
+  const freq = parseInt(document.getElementById('tt-frequency')?.value) || 2;
+  const dur  = parseInt(document.getElementById('tt-duration')?.value) || 60;
+
+  const payload = {
+    user_id: currentUser.id,
+    enabled: ttConfig?.enabled ?? false,
+    frequency_days: freq,
+    duration_mins: dur,
+    muscle_groups: ttMuscles,
+  };
+
+  const { data, error } = await sbClient.from('timetable_config')
+    .upsert(payload, { onConflict: 'user_id' })
+    .select()
+    .single();
+
+  if (!error) { ttConfig = data; toast('Timetable preferences saved!'); }
+  else toast('Error saving timetable: ' + error.message);
+}
+
+// ── Toggle auto-schedule on/off ───────────────────────────────────────────────
+async function toggleTimetable() {
+  if (!sbClient || !currentUser) return;
+  const newEnabled = !(ttConfig?.enabled ?? false);
+
+  const payload = {
+    user_id: currentUser.id,
+    enabled: newEnabled,
+    frequency_days: parseInt(document.getElementById('tt-frequency')?.value) || 2,
+    duration_mins:  parseInt(document.getElementById('tt-duration')?.value) || 60,
+    muscle_groups: ttMuscles,
+  };
+
+  const { data, error } = await sbClient.from('timetable_config')
+    .upsert(payload, { onConflict: 'user_id' })
+    .select()
+    .single();
+
+  if (!error) {
+    ttConfig = data;
+    toast(newEnabled ? '✓ Auto-schedule enabled!' : 'Auto-schedule paused');
+    renderTimetable();
+  } else toast('Error: ' + error.message);
+}
+
+// ── Mark workout complete ────────────────────────────────────────────────────
+async function markWorkoutComplete(workoutId) {
+  if (!sbClient || !currentUser) return;
+  const btn = document.getElementById('btn-complete-' + workoutId);
+  if (btn) { btn.textContent = 'Saving…'; btn.disabled = true; }
+
+  const { error } = await sbClient.from('scheduled_workouts')
+    .update({ status: 'completed', completed_at: new Date().toISOString() })
+    .eq('id', workoutId)
+    .eq('user_id', currentUser.id);
+
+  if (!error) {
+    // Update local list
+    const w = ttWorkouts.find(x => x.id === workoutId);
+    if (w) { w.status = 'completed'; w.completed_at = new Date().toISOString(); }
+    toast('💪 Workout marked complete!');
+    renderTimetable();
+  } else {
+    if (btn) { btn.textContent = '✓ Mark Complete'; btn.disabled = false; }
+    toast('Error: ' + error.message);
+  }
+}
+
+// ── Toggle muscle chip ────────────────────────────────────────────────────────
+function toggleTTMuscle(m) {
+  if (ttMuscles.includes(m)) {
+    ttMuscles = ttMuscles.filter(x => x !== m);
+  } else {
+    ttMuscles.push(m);
+  }
+  renderTTMuscleChips();
+  saveTimetableConfig();
+}
+
+// ── Render functions ──────────────────────────────────────────────────────────
+async function renderTimetable() {
+  if (!ttConfig && sbClient && currentUser) await loadTimetable();
+
+  const enabled = ttConfig?.enabled ?? false;
+
+  // Toggle knob
+  const toggle = document.getElementById('tt-toggle');
+  const knob   = document.getElementById('tt-toggle-knob');
+  if (toggle && knob) {
+    toggle.style.background = enabled ? 'rgba(232,255,71,0.2)' : 'var(--surface3)';
+    toggle.style.borderColor = enabled ? 'var(--accent)' : 'var(--border)';
+    knob.style.background = enabled ? 'var(--accent)' : 'var(--text3)';
+    knob.style.transform = enabled ? 'translateX(24px)' : 'translateX(0)';
+  }
+
+  // Pre-fill config inputs
+  if (ttConfig) {
+    const freqEl = document.getElementById('tt-frequency');
+    const durEl  = document.getElementById('tt-duration');
+    if (freqEl) freqEl.value = ttConfig.frequency_days;
+    if (durEl)  durEl.value  = ttConfig.duration_mins;
+  }
+
+  renderTTMuscleChips();
+  renderTTWorkouts();
+}
+
+function renderTTMuscleChips() {
+  const el = document.getElementById('tt-muscle-chips');
+  if (!el) return;
+  el.innerHTML = TT_MUSCLES.map(m => `
+    <div class="muscle-chip ${ttMuscles.includes(m) ? 'selected' : ''}"
+      onclick="toggleTTMuscle('${m}')">${m}</div>
+  `).join('');
+}
+
+function renderTTWorkouts() {
+  const area = document.getElementById('tt-history-area');
+  if (!area) return;
+
+  const todayUTC = new Date().toISOString().slice(0, 10);
+
+  if (ttWorkouts.length === 0) {
+    const enabled = ttConfig?.enabled ?? false;
+    area.innerHTML = `
+      <div style="text-align:center;padding:48px 24px;color:var(--text3)">
+        <div style="font-size:2rem;margin-bottom:12px">📅</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.78rem;letter-spacing:0.1em">
+          ${enabled
+            ? 'Your first workout will be generated tonight at 12AM UTC.'
+            : 'Enable auto-schedule above to get started.'}
+        </div>
+      </div>`;
+    return;
+  }
+
+  const pending   = ttWorkouts.filter(w => w.status === 'pending');
+  const completed = ttWorkouts.filter(w => w.status === 'completed');
+
+  let html = '';
+
+  // ── Pending / upcoming ──
+  if (pending.length > 0) {
+    html += `<div class="settings-label" style="margin:20px 0 10px">Pending Workouts</div>`;
+    pending.forEach(w => {
+      const isToday = w.scheduled_date === todayUTC;
+      const isPast  = w.scheduled_date < todayUTC;
+      const dateLabel = isToday ? 'Today' : isPast ? `Overdue · ${fmtDate(w.scheduled_date)}` : fmtDate(w.scheduled_date);
+      const statusColor = isToday ? 'var(--accent)' : isPast ? 'var(--danger)' : 'var(--text3)';
+      const exs = (w.exercise_snapshot || []) as any[];
+      const muscles = [...new Set(exs.map((e:any) => e.muscle))].join(', ');
+
+      html += `
+        <div class="tt-workout-card ${isToday ? 'is-today' : ''}">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div>
+              <span class="tt-date-badge" style="color:${statusColor}">${dateLabel}</span>
+              ${w.email_send_count > 0
+                ? `<span style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--text3);margin-left:10px">✉ emailed ${w.email_send_count}×</span>`
+                : ''}
+            </div>
+            <span class="tt-status-pill" style="color:${statusColor};border-color:${statusColor}">
+              ${isPast && !isToday ? 'overdue' : 'pending'}
+            </span>
+          </div>
+          <div style="font-size:0.78rem;color:var(--text2)">${exs.length} exercises · ${w.total_mins} min · ${muscles}</div>
+          <div class="tt-ex-pills">
+            ${exs.map((e:any) => `<span class="tt-ex-pill">${e.name}</span>`).join('')}
+          </div>
+          ${(isToday || isPast)
+            ? `<div style="margin-top:14px">
+                <button class="btn-complete" id="btn-complete-${w.id}" onclick="markWorkoutComplete('${w.id}')">
+                  ✓ Mark Complete
+                </button>
+               </div>`
+            : ''}
+        </div>`;
+    });
+  }
+
+  // ── Completed ──
+  if (completed.length > 0) {
+    html += `<div class="settings-label" style="margin:20px 0 10px">Completed Workouts</div>`;
+    completed.forEach(w => {
+      const exs = (w.exercise_snapshot || []) as any[];
+      html += `
+        <div class="tt-workout-card is-completed">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <span class="tt-date-badge" style="color:var(--accent3)">${fmtDate(w.scheduled_date)}</span>
+            <span class="tt-status-pill" style="color:var(--accent3);border-color:var(--accent3)">completed</span>
+          </div>
+          <div style="font-size:0.78rem;color:var(--text2)">${exs.length} exercises · ${w.total_mins} min</div>
+          <div class="tt-ex-pills">
+            ${exs.slice(0,5).map((e:any) => `<span class="tt-ex-pill">${e.name}</span>`).join('')}
+            ${exs.length > 5 ? `<span class="tt-ex-pill">+${exs.length-5} more</span>` : ''}
+          </div>
+        </div>`;
+    });
+  }
+
+  area.innerHTML = html;
+}
+
+function fmtDate(dateStr) {
+  return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-GB', {
+    weekday: 'short', day: 'numeric', month: 'short', year: 'numeric'
+  });
 }
 
 // ─── INIT ───────────────────────────────────────────────────────────────────

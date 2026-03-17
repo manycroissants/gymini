@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<!-- v=20260317-5 -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gymini — AI Personal Trainer</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -2073,7 +2077,10 @@ async function initApp() {
   sbClient.auth.onAuthStateChange(async (event, session) => {
     console.log('Auth event:', event, '| has session:', !!session);
 
-    if (event === 'INITIAL_SESSION') {
+    // INITIAL_SESSION = page load with existing session (normal case)
+    // SIGNED_IN = page load after server restart OR after login/register
+    // Both cases on first load should enter the app if session exists
+    if (event === 'INITIAL_SESSION' || (event === 'SIGNED_IN' && !appStarted)) {
       clearTimeout(fallbackTimer);
       appStarted = true;
       if (session) {
@@ -2084,8 +2091,8 @@ async function initApp() {
         document.getElementById('auth-screen').style.display = 'flex';
       }
 
-    } else if (event === 'SIGNED_IN') {
-      // Fired after login/register — only act if we don't already have this user loaded
+    } else if (event === 'SIGNED_IN' && appStarted) {
+      // Fired after explicit login/register action — only if different user
       if (!currentUser || currentUser.id !== session.user.id) {
         currentUser = session.user;
         await enterApp();
@@ -2097,7 +2104,6 @@ async function initApp() {
       showApp(false);
 
     } else if (event === 'TOKEN_REFRESHED' && session) {
-      // Just update the user object, don't re-enter the app
       currentUser = session.user;
 
     } else if (event === 'USER_UPDATED' && session) {

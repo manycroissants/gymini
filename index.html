@@ -1784,6 +1784,12 @@ async function _flushSave(retries = 3) {
   _saveTimer = setTimeout(() => _flushSave(), 5000); // retry in 5s
 }
 
+async function _hasUserRecord() {
+  if (!sbClient || !currentUser) return false;
+  const { data } = await sbClient.from('user_data').select('user_id').eq('user_id', currentUser.id).maybeSingle();
+  return !!data;
+}
+
 async function loadUserData() {
   if (!sbClient || !currentUser) return null;
 
@@ -1901,7 +1907,10 @@ async function handleRegister() {
   const { data, error } = await sbClient.auth.signUp({
     email,
     password,
-    options: { data: { username } }
+    options: {
+      data: { username },
+      emailRedirectTo: 'https://manycroissants.github.io/gymini/',
+    }
   });
 
   btn.textContent = 'Create Account';
@@ -1909,13 +1918,19 @@ async function handleRegister() {
 
   if (error) { showAuthError(error.message); return; }
 
-  currentUser = data.user;
-
-  // Create the user_data row immediately
-  await createUserRecord(username);
-
-  showAuthSuccess('Account created! Signing you in…');
-  setTimeout(async () => { await enterApp(); }, 1000);
+  // Supabase may return a session immediately (if email confirm disabled)
+  // or require email confirmation first
+  if (data.session) {
+    // Email confirmation disabled — log straight in
+    currentUser = data.user;
+    await createUserRecord(username);
+    showAuthSuccess('Account created! Loading your profile…');
+    setTimeout(async () => { await enterApp(); }, 800);
+  } else {
+    // Email confirmation required — store username for when they confirm
+    localStorage.setItem('gymini_pending_username', username);
+    showAuthSuccess('Almost there! Check your email and click the confirmation link to log in.');
+  }
 }
 
 async function handleLogout() {
@@ -1961,9 +1976,15 @@ async function handleChangePassword() {
 // ─── ENTER APP (after auth) ──────────────────────────────────────────────────
 
 async function enterApp() {
-  // Show loading while fetching data
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('app-loading').style.display = 'flex';
+
+  // Check for pending username from email-confirmation signup flow
+  const pendingUsername = localStorage.getItem('gymini_pending_username');
+  if (pendingUsername && !await _hasUserRecord()) {
+    await createUserRecord(pendingUsername);
+    localStorage.removeItem('gymini_pending_username');
+  }
 
   const data = await loadUserData();
 
@@ -1973,7 +1994,7 @@ async function enterApp() {
       enabled: data.enabled || {},
       sessions: data.sessions || [],
       nextId: data.next_id || 1000,
-      _username: data.username || '',
+      _username: data.username || pendingUsername || '',
       _created_at: data.created_at || null,
     };
 
@@ -1993,7 +2014,7 @@ async function enterApp() {
   } else {
     // New user — freshState already created in createUserRecord, reload
     state = freshState();
-    state._username = currentUser.user_metadata?.username || '';
+    state._username = pendingUsername || currentUser.user_metadata?.username || '';
     state._created_at = currentUser.created_at || null;
   }
 
@@ -2022,30 +2043,50 @@ function showApp(show) {
 
 async function initApp() {
   const config = getSupabaseConfig();
-
-  // Config always available (credentials baked in)
   initSupabase(config.url, config.key);
 
-  // Check for existing session
-  const { data: { session } } = await sbClient.auth.getSession();
+  // Handle email confirmation redirects — Supabase appends #access_token to the URL
+  // after a user clicks their confirmation link. onAuthStateChange picks this up automatically.
+  const hashParams = new URLSearchParams(window.location.hash.replace('#', '?'));
+  const isEmailCallback = hashParams.get('access_token') || hashParams.get('type') === 'signup';
 
-  if (session) {
-    currentUser = session.user;
-    await enterApp();
-  } else {
+  // Set a 6-second timeout — if getSession hangs (stale/revoked token), bail to login screen
+  const sessionResult = await Promise.race([
+    sbClient.auth.getSession(),
+    new Promise(resolve => setTimeout(() => resolve({ data: { session: null }, timedOut: true }), 6000))
+  ]);
+
+  if (sessionResult.timedOut) {
+    // Stale session — clear it and show login
+    console.warn('Session check timed out — clearing session');
+    await sbClient.auth.signOut().catch(() => {});
     document.getElementById('app-loading').style.display = 'none';
     document.getElementById('auth-screen').style.display = 'flex';
-  }
-
-  // Listen for auth changes (e.g. tab visibility, session expiry)
-  sbClient.auth.onAuthStateChange(async (event, session) => {
-    if (event === 'SIGNED_OUT') {
-      currentUser = null;
-      state = null;
-      showApp(false);
-    } else if (event === 'SIGNED_IN' && session && !currentUser) {
+  } else {
+    const session = sessionResult.data?.session;
+    if (session) {
       currentUser = session.user;
       await enterApp();
+    } else {
+      document.getElementById('app-loading').style.display = 'none';
+      document.getElementById('auth-screen').style.display = 'flex';
+    }
+  }
+
+  // Listen for all auth state changes
+  sbClient.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_OUT') {
+      currentUser = null; state = null;
+      ttConfig = null; ttWorkouts = []; ttMuscles = [];
+      showApp(false);
+    } else if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session) {
+      // Handle both normal logins and email confirmation callbacks
+      if (!currentUser || currentUser.id !== session.user.id) {
+        currentUser = session.user;
+        await enterApp();
+      }
+    } else if (event === 'USER_UPDATED' && session) {
+      currentUser = session.user;
     }
   });
 }

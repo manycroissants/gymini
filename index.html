@@ -1979,47 +1979,58 @@ async function enterApp() {
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('app-loading').style.display = 'flex';
 
-  // Check for pending username from email-confirmation signup flow
-  const pendingUsername = localStorage.getItem('gymini_pending_username');
-  if (pendingUsername && !await _hasUserRecord()) {
-    await createUserRecord(pendingUsername);
-    localStorage.removeItem('gymini_pending_username');
+  try {
+    // Check for pending username from email-confirmation signup flow
+    const pendingUsername = localStorage.getItem('gymini_pending_username');
+    if (pendingUsername && !await _hasUserRecord()) {
+      await createUserRecord(pendingUsername);
+      localStorage.removeItem('gymini_pending_username');
+    }
+
+    const data = await loadUserData();
+    const pendingUser = localStorage.getItem('gymini_pending_username'); // re-read in case cleared
+
+    if (data) {
+      state = {
+        exercises: data.exercises || [],
+        enabled: data.enabled || {},
+        sessions: data.sessions || [],
+        nextId: data.next_id || 1000,
+        _username: data.username || '',
+        _created_at: data.created_at || null,
+        deletedDefaults: data.deleted_defaults || [],
+      };
+
+      // Add any new default exercises the user hasn't deleted
+      const deletedSet = new Set(state.deletedDefaults);
+      const existingIds = new Set(state.exercises.map(e => e.id));
+      DEFAULT_EXERCISES.forEach(def => {
+        if (!existingIds.has(def.id) && !deletedSet.has(def.id)) {
+          state.exercises.push({ ...def });
+        }
+        const ex = state.exercises.find(e => e.id === def.id);
+        if (ex) delete ex.difficulty;
+      });
+    } else {
+      // Brand new user with no data row yet
+      state = freshState();
+      state._username = currentUser.user_metadata?.username || '';
+      state._created_at = currentUser.created_at || null;
+      state.deletedDefaults = [];
+    }
+
+    document.getElementById('app-loading').style.display = 'none';
+    showApp(true);
+
+  } catch (err) {
+    console.error('enterApp crashed:', err);
+    document.getElementById('app-loading').innerHTML =
+      '<div style="text-align:center;padding:40px">' +
+      '<div style="font-family:DM Mono,monospace;font-size:0.8rem;color:#ff4747;margin-bottom:16px">Failed to load your data</div>' +
+      '<div style="font-size:0.75rem;color:#555;font-family:DM Mono,monospace;margin-bottom:20px">' + (err.message || 'Unknown error') + '</div>' +
+      '<button onclick="handleLogout()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:10px 20px;border-radius:8px;cursor:pointer;font-family:DM Mono,monospace;font-size:0.75rem">Sign Out & Retry</button>' +
+      '</div>';
   }
-
-  const data = await loadUserData();
-
-  if (data) {
-    state = {
-      exercises: data.exercises || [],
-      enabled: data.enabled || {},
-      sessions: data.sessions || [],
-      nextId: data.next_id || 1000,
-      _username: data.username || pendingUsername || '',
-      _created_at: data.created_at || null,
-    };
-
-    // Restore deletedDefaults from DB
-    state.deletedDefaults = data.deleted_defaults || [];
-    const deletedSet = new Set(state.deletedDefaults);
-
-    // Only add missing default exercises that the user has NOT intentionally deleted
-    const existingIds = new Set(state.exercises.map(e => e.id));
-    DEFAULT_EXERCISES.forEach(def => {
-      if (!existingIds.has(def.id) && !deletedSet.has(def.id)) {
-        state.exercises.push({ ...def });
-      }
-      const ex = state.exercises.find(e => e.id === def.id);
-      if (ex) delete ex.difficulty;
-    });
-  } else {
-    // New user — freshState already created in createUserRecord, reload
-    state = freshState();
-    state._username = pendingUsername || currentUser.user_metadata?.username || '';
-    state._created_at = currentUser.created_at || null;
-  }
-
-  document.getElementById('app-loading').style.display = 'none';
-  showApp(true);
 }
 
 function showApp(show) {
@@ -2045,46 +2056,50 @@ async function initApp() {
   const config = getSupabaseConfig();
   initSupabase(config.url, config.key);
 
-  // Handle email confirmation redirects — Supabase appends #access_token to the URL
-  // after a user clicks their confirmation link. onAuthStateChange picks this up automatically.
-  const hashParams = new URLSearchParams(window.location.hash.replace('#', '?'));
-  const isEmailCallback = hashParams.get('access_token') || hashParams.get('type') === 'signup';
+  // In Supabase JS v2, onAuthStateChange fires immediately with the current session
+  // on page load (INITIAL_SESSION event). This is the single correct entry point —
+  // avoids the race condition where getSession() and onAuthStateChange both call enterApp().
+  let appStarted = false;
 
-  // Set a 6-second timeout — if getSession hangs (stale/revoked token), bail to login screen
-  const sessionResult = await Promise.race([
-    sbClient.auth.getSession(),
-    new Promise(resolve => setTimeout(() => resolve({ data: { session: null }, timedOut: true }), 6000))
-  ]);
-
-  if (sessionResult.timedOut) {
-    // Stale session — clear it and show login
-    console.warn('Session check timed out — clearing session');
-    await sbClient.auth.signOut().catch(() => {});
-    document.getElementById('app-loading').style.display = 'none';
-    document.getElementById('auth-screen').style.display = 'flex';
-  } else {
-    const session = sessionResult.data?.session;
-    if (session) {
-      currentUser = session.user;
-      await enterApp();
-    } else {
+  // Fallback: if onAuthStateChange never fires within 8s, show login screen
+  const fallbackTimer = setTimeout(() => {
+    if (!appStarted) {
+      console.warn('Auth state never fired — showing login');
       document.getElementById('app-loading').style.display = 'none';
       document.getElementById('auth-screen').style.display = 'flex';
     }
-  }
+  }, 8000);
 
-  // Listen for all auth state changes
   sbClient.auth.onAuthStateChange(async (event, session) => {
-    if (event === 'SIGNED_OUT') {
-      currentUser = null; state = null;
-      ttConfig = null; ttWorkouts = []; ttMuscles = [];
-      showApp(false);
-    } else if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session) {
-      // Handle both normal logins and email confirmation callbacks
+    console.log('Auth event:', event, '| has session:', !!session);
+
+    if (event === 'INITIAL_SESSION') {
+      clearTimeout(fallbackTimer);
+      appStarted = true;
+      if (session) {
+        currentUser = session.user;
+        await enterApp();
+      } else {
+        document.getElementById('app-loading').style.display = 'none';
+        document.getElementById('auth-screen').style.display = 'flex';
+      }
+
+    } else if (event === 'SIGNED_IN') {
+      // Fired after login/register — only act if we don't already have this user loaded
       if (!currentUser || currentUser.id !== session.user.id) {
         currentUser = session.user;
         await enterApp();
       }
+
+    } else if (event === 'SIGNED_OUT') {
+      currentUser = null; state = null;
+      ttConfig = null; ttWorkouts = []; ttMuscles = [];
+      showApp(false);
+
+    } else if (event === 'TOKEN_REFRESHED' && session) {
+      // Just update the user object, don't re-enter the app
+      currentUser = session.user;
+
     } else if (event === 'USER_UPDATED' && session) {
       currentUser = session.user;
     }

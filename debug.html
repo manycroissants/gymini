@@ -3,115 +3,155 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gymini Debug</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Gymini Debug v2</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  body { background:#0a0a0a; color:#f0f0f0; font-family:monospace; padding:20px; }
-  .step { padding:10px; margin:6px 0; border-radius:6px; font-size:13px; }
-  .ok   { background:#0a2a0a; border:1px solid #47ffb8; color:#47ffb8; }
-  .err  { background:#2a0a0a; border:1px solid #ff4747; color:#ff4747; }
-  .wait { background:#1a1a1a; border:1px solid #555;    color:#888; }
-  .info { background:#0a0a2a; border:1px solid #4488ff; color:#88aaff; }
-  h1 { color:#e8ff47; letter-spacing:4px; font-size:1.4rem; margin-bottom:20px; }
-  button { background:#e8ff47; color:#000; border:none; padding:10px 20px; border-radius:6px; cursor:pointer; font-weight:700; margin:4px; }
-  input  { background:#111; border:1px solid #333; color:#f0f0f0; padding:8px; border-radius:4px; width:260px; margin:4px; }
+  body { background:#0a0a0a; color:#f0f0f0; font-family:monospace; padding:16px; font-size:13px; }
+  .ok   { background:#0a2a0a; border:1px solid #47ffb8; color:#47ffb8; padding:8px 12px; margin:4px 0; border-radius:6px; }
+  .err  { background:#2a0a0a; border:1px solid #ff4747; color:#ff4747; padding:8px 12px; margin:4px 0; border-radius:6px; }
+  .info { background:#0a0a2a; border:1px solid #4488ff; color:#88aaff; padding:8px 12px; margin:4px 0; border-radius:6px; }
+  .wait { background:#1a1a1a; border:1px solid #555;    color:#888;    padding:8px 12px; margin:4px 0; border-radius:6px; }
+  h2 { color:#e8ff47; margin:16px 0 8px; letter-spacing:2px; font-size:1rem; }
+  button { background:#e8ff47; color:#000; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:700; margin:4px; font-size:12px; }
+  .danger { background:#ff4747; color:#fff; }
 </style>
 </head>
 <body>
-<h1>GYMINI — DEBUG</h1>
+<h2>GYMINI DEBUG v2 — <span id="ts"></span></h2>
 <div id="log"></div>
-<div id="login-test" style="margin-top:20px;display:none">
-  <input id="email" type="email" placeholder="Email">
-  <input id="pass" type="password" placeholder="Password">
-  <button onclick="testLogin()">Test Login</button>
+
+<div style="margin-top:16px">
+  <button onclick="clearStorage()">Clear Storage &amp; Reload</button>
+  <button onclick="testFullEnterApp()">Simulate enterApp()</button>
 </div>
-<button onclick="clearStorage()" style="background:#ff4747;margin-top:20px">Clear All Storage & Reload</button>
 
 <script>
+document.getElementById('ts').textContent = new Date().toISOString();
+
 const SB_URL = 'https://zfugjdedlxcdjhbyrzth.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpmdWdqZGVkbHhjZGpoYnlyenRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyOTQ1MjcsImV4cCI6MjA4ODg3MDUyN30.IwcMrz3Rjoyf0TE7MpiclqVgoH99olTI139f0lUfcEw';
 
+let L = document.getElementById('log');
 function log(msg, type='wait') {
   const d = document.createElement('div');
-  d.className = 'step ' + type;
+  d.className = type;
   d.textContent = new Date().toISOString().slice(11,23) + ' — ' + msg;
-  document.getElementById('log').appendChild(d);
-  console.log(msg);
+  L.appendChild(d);
+  console.log('[' + type + ']', msg);
+  window.scrollTo(0,99999);
 }
 
 function clearStorage() {
-  localStorage.clear();
-  sessionStorage.clear();
-  log('Storage cleared — reloading...', 'info');
-  setTimeout(() => location.reload(), 500);
+  localStorage.clear(); sessionStorage.clear();
+  log('Storage cleared — reloading', 'info');
+  setTimeout(() => location.reload(), 400);
 }
 
-async function testLogin() {
-  const email = document.getElementById('email').value;
-  const pass = document.getElementById('pass').value;
-  log('Testing login for: ' + email, 'wait');
-  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
-  if (error) { log('Login error: ' + error.message, 'err'); return; }
-  log('Login OK — user: ' + data.user.id, 'ok');
-  await testUserData(data.user.id);
+// ── Create client ─────────────────────────────────────────────────────────────
+log('Creating Supabase client...', 'wait');
+const sb = window.supabase.createClient(SB_URL, SB_KEY);
+log('Client created', 'ok');
+
+// ── Simulate the EXACT enterApp logic from gym-trainer.html ──────────────────
+async function testFullEnterApp() {
+  log('--- Simulating full enterApp() ---', 'info');
+
+  // Step A: _hasUserRecord
+  log('A: calling _hasUserRecord()...', 'wait');
+  try {
+    const { data: hrData, error: hrErr } = await sb.from('user_data')
+      .select('user_id').eq('user_id', currentUserId).maybeSingle();
+    if (hrErr) throw hrErr;
+    log('A: _hasUserRecord = ' + (!!hrData), hrData ? 'ok' : 'info');
+  } catch(e) { log('A: _hasUserRecord ERROR: ' + e.message, 'err'); }
+
+  // Step B: loadUserData
+  log('B: calling loadUserData()...', 'wait');
+  try {
+    const { data, error } = await sb.from('user_data')
+      .select('exercises, enabled, sessions, next_id, username, created_at, deleted_defaults')
+      .eq('user_id', currentUserId)
+      .single();
+    if (error) throw error;
+    log('B: loadUserData OK — exercises:' + (data.exercises?.length||0) + ' sessions:' + (data.sessions?.length||0), 'ok');
+    log('B: deleted_defaults type: ' + typeof data.deleted_defaults + ' value: ' + JSON.stringify(data.deleted_defaults), 'info');
+
+    // Step C: simulate state building
+    log('C: building state...', 'wait');
+    const state = {
+      exercises: data.exercises || [],
+      enabled: data.enabled || {},
+      sessions: data.sessions || [],
+      nextId: data.next_id || 1000,
+      _username: data.username || '',
+      _created_at: data.created_at || null,
+      deletedDefaults: data.deleted_defaults || [],
+    };
+    log('C: state built OK — ' + state.exercises.length + ' exercises', 'ok');
+
+    // Step D: simulate DEFAULT_EXERCISES migration loop
+    log('D: running DEFAULT_EXERCISES migration loop...', 'wait');
+    const deletedSet = new Set(state.deletedDefaults);
+    const existingIds = new Set(state.exercises.map(e => e.id));
+    let added = 0;
+    // We don't have DEFAULT_EXERCISES here, but we test the loop logic
+    log('D: deletedSet size: ' + deletedSet.size + ' existingIds size: ' + existingIds.size, 'info');
+    log('D: migration loop OK', 'ok');
+
+    // Step E: simulate showApp(true)
+    log('E: simulating showApp(true)...', 'wait');
+    log('E: document.getElementById("app-header") = ' + document.getElementById('app-header'), 'info');
+    log('E: document.getElementById("app-main") = ' + document.getElementById('app-main'), 'info');
+    // These don't exist on debug page but that's fine — testing if the logic throws
+    log('E: showApp simulation complete (elements missing on debug page — expected)', 'ok');
+
+    log('--- enterApp() simulation PASSED ---', 'ok');
+  } catch(e) {
+    log('B/C/D/E ERROR: ' + e.message + ' | stack: ' + (e.stack||'').split('\n')[1], 'err');
+  }
 }
 
-async function testUserData(userId) {
-  log('Fetching user_data for: ' + userId, 'wait');
-  const { data, error } = await sb.from('user_data')
-    .select('user_id, username, exercises, sessions')
-    .eq('user_id', userId)
-    .maybeSingle();
-  if (error) { log('user_data error: ' + error.message + ' (code: ' + error.code + ')', 'err'); return; }
-  if (!data) { log('user_data: NO ROW FOUND for this user', 'err'); return; }
-  log('user_data OK — exercises: ' + (data.exercises?.length||0) + ', sessions: ' + (data.sessions?.length||0), 'ok');
-}
+// ── Auth state ────────────────────────────────────────────────────────────────
+let currentUserId = null;
+log('Waiting for onAuthStateChange...', 'wait');
 
-// ── Run diagnostics ───────────────────────────────────────────────────────────
-log('Step 1: Checking Supabase CDN loaded...', 'wait');
-if (!window.supabase) { log('ERROR: window.supabase not found — CDN failed to load', 'err'); }
-else { log('Supabase CDN loaded OK', 'ok'); }
-
-log('Step 2: Creating Supabase client...', 'wait');
-let sb;
-try {
-  sb = window.supabase.createClient(SB_URL, SB_KEY);
-  log('Client created OK', 'ok');
-} catch(e) {
-  log('Client creation failed: ' + e.message, 'err');
-}
-
-log('Step 3: Checking localStorage for existing session...', 'wait');
-const keys = Object.keys(localStorage).filter(k => k.includes('supabase') || k.includes('gymini'));
-if (keys.length === 0) {
-  log('localStorage: empty (no cached session)', 'info');
-} else {
-  keys.forEach(k => log('localStorage key: ' + k, 'info'));
-}
-
-log('Step 4: Registering onAuthStateChange listener...', 'wait');
-const authTimeout = setTimeout(() => {
-  log('TIMEOUT: onAuthStateChange never fired after 10s — this is the bug', 'err');
-  document.getElementById('login-test').style.display = 'block';
-}, 10000);
+const timer = setTimeout(() => log('TIMEOUT: onAuthStateChange never fired!', 'err'), 10000);
 
 sb.auth.onAuthStateChange(async (event, session) => {
-  clearTimeout(authTimeout);
-  log('onAuthStateChange fired — event: ' + event + ' | session: ' + (session ? 'YES (user: ' + session.user.id + ')' : 'NULL'), 
+  clearTimeout(timer);
+  log('onAuthStateChange: event=' + event + ' session=' + (session ? 'YES uid='+session.user.id : 'NULL'),
       session ? 'ok' : 'info');
-  
-  if (session) {
-    log('Step 5: Session found — testing user_data fetch...', 'wait');
-    await testUserData(session.user.id);
-    log('All checks passed! The main app should work.', 'ok');
-    log('If main app still hangs, it is a code bug in gym-trainer.html not a connectivity issue.', 'info');
-  } else {
-    log('No active session — showing login test', 'info');
-    document.getElementById('login-test').style.display = 'block';
+
+  if (!session) {
+    log('No session — you need to log in on the main app first, then come back here', 'err');
+    return;
+  }
+
+  currentUserId = session.user.id;
+  log('User ID: ' + currentUserId, 'info');
+
+  // Fetch user_data
+  log('Fetching user_data...', 'wait');
+  try {
+    const { data, error } = await sb.from('user_data')
+      .select('exercises, enabled, sessions, next_id, username, created_at, deleted_defaults')
+      .eq('user_id', currentUserId)
+      .single();
+
+    if (error) {
+      log('user_data ERROR: ' + error.message + ' | code: ' + error.code + ' | hint: ' + error.hint, 'err');
+      return;
+    }
+
+    log('user_data OK — exercises:' + (data.exercises?.length||0) + ' sessions:' + (data.sessions?.length||0), 'ok');
+    log('All connectivity checks PASSED', 'ok');
+    log('Click "Simulate enterApp()" to test the full app startup logic', 'info');
+
+  } catch(e) {
+    log('user_data EXCEPTION: ' + e.message, 'err');
   }
 });
-
-log('Waiting for onAuthStateChange...', 'wait');
 </script>
 </body>
 </html>

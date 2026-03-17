@@ -25,9 +25,9 @@
     --text3: #555;
     --danger: #ff4747;
   }
-
+ 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
+ 
   body {
     background: var(--bg);
     color: var(--text);
@@ -35,7 +35,7 @@
     min-height: 100vh;
     overflow-x: hidden;
   }
-
+ 
   /* NOISE TEXTURE */
   body::before {
     content: '';
@@ -46,7 +46,7 @@
     z-index: 9999;
     opacity: 0.4;
   }
-
+ 
   /* HEADER */
   header {
     display: flex;
@@ -60,7 +60,7 @@
     backdrop-filter: blur(12px);
     z-index: 100;
   }
-
+ 
   .logo {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 2rem;
@@ -68,9 +68,9 @@
     color: var(--accent);
     line-height: 1;
   }
-
+ 
   .logo span { color: var(--text3); font-size: 0.65rem; display: block; letter-spacing: 0.12em; font-family: 'DM Mono', monospace; margin-top: 3px; }
-
+ 
   nav {
     display: flex;
     gap: 4px;
@@ -79,7 +79,7 @@
     border-radius: 12px;
     padding: 4px;
   }
-
+ 
   nav button {
     background: none;
     border: none;
@@ -93,22 +93,22 @@
     transition: all 0.2s;
     text-transform: uppercase;
   }
-
+ 
   nav button.active {
     background: var(--accent);
     color: #000;
     font-weight: 500;
   }
-
+ 
   nav button:hover:not(.active) { background: var(--surface2); color: var(--text); }
-
+ 
   /* MAIN */
   main {
     max-width: 1100px;
     margin: 0 auto;
     padding: 32px;
   }
-
+ 
   /* SECTION HEADERS */
   .section-header {
     margin-bottom: 32px;
@@ -127,19 +127,19 @@
     margin-top: 8px;
     font-family: 'DM Mono', monospace;
   }
-
+ 
   /* PANELS */
   .panel {
     display: none;
     animation: fadeIn 0.3s ease;
   }
   .panel.active { display: block; }
-
+ 
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
   }
-
+ 
   /* CARDS */
   .card {
     background: var(--surface);
@@ -147,7 +147,7 @@
     border-radius: 16px;
     padding: 24px;
   }
-
+ 
   .card-label {
     font-family: 'DM Mono', monospace;
     font-size: 0.65rem;
@@ -156,11 +156,11 @@
     text-transform: uppercase;
     margin-bottom: 12px;
   }
-
+ 
   /* GRID */
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-
+ 
   /* EXERCISE LIBRARY — TABLE LAYOUT */
   .lib-header {
     display: flex;
@@ -168,14 +168,14 @@
     align-items: flex-end;
     margin-bottom: 28px;
   }
-
+ 
   .lib-filter-row {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
     margin-bottom: 24px;
   }
-
+ 
   .muscle-tab {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -191,10 +191,10 @@
   }
   .muscle-tab:hover { border-color: var(--accent); color: var(--accent); }
   .muscle-tab.active { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 500; }
-
+ 
   /* MUSCLE GROUP SECTION */
   .muscle-section { margin-bottom: 28px; }
-
+ 
   .muscle-section-header {
     display: flex;
     align-items: center;
@@ -205,21 +205,21 @@
     border: 1px solid var(--border);
     border-radius: 10px 10px 0 0;
   }
-
+ 
   .muscle-section-title {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 1.1rem;
     letter-spacing: 0.12em;
     color: var(--accent);
   }
-
+ 
   .muscle-section-count {
     font-family: 'DM Mono', monospace;
     font-size: 0.65rem;
     color: var(--text3);
     margin-left: auto;
   }
-
+ 
   /* EXERCISE TABLE */
   .ex-table {
     width: 100%;
@@ -229,7 +229,7 @@
     border-radius: 0 0 10px 10px;
     overflow: hidden;
   }
-
+ 
   .ex-table thead th {
     background: var(--surface);
     font-family: 'DM Mono', monospace;
@@ -242,37 +242,37 @@
     border-bottom: 1px solid var(--border);
     font-weight: 400;
   }
-
+ 
   .ex-table tbody tr {
     background: var(--surface);
     transition: background 0.15s;
   }
-
+ 
   .ex-table tbody tr:hover { background: var(--surface2); }
-
+ 
   .ex-table tbody tr:not(:last-child) td {
     border-bottom: 1px solid var(--border);
   }
-
+ 
   .ex-table td {
     padding: 11px 14px;
     font-size: 0.85rem;
     vertical-align: middle;
   }
-
+ 
   .ex-table td.col-name {
     font-weight: 500;
     color: var(--text);
     min-width: 160px;
   }
-
+ 
   .ex-table td.col-name.disabled-row { color: var(--text3); }
-
+ 
   .ex-table td.col-meta {
     color: var(--text2);
     font-size: 0.8rem;
   }
-
+ 
   .ex-table td.col-num {
     font-family: 'DM Mono', monospace;
     font-size: 0.78rem;
@@ -280,9 +280,9 @@
     text-align: center;
     white-space: nowrap;
   }
-
+ 
   .ex-table td.col-num .accent { color: var(--accent); font-weight: 500; }
-
+ 
   .ex-table td.col-total {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 1rem;
@@ -291,16 +291,16 @@
     white-space: nowrap;
     padding-right: 8px;
   }
-
+ 
   .ex-table td.col-total.disabled-row { color: var(--text3); }
-
+ 
   .ex-table td.col-actions {
     text-align: right;
     padding-right: 12px;
     white-space: nowrap;
     width: 80px;
   }
-
+ 
   /* ACTION ICON BUTTONS */
   .icon-btn {
     background: none;
@@ -316,18 +316,18 @@
     color: var(--text3);
     font-size: 0.85rem;
   }
-
+ 
   .icon-btn:hover { background: var(--surface3); color: var(--text); }
-
+ 
   .icon-btn.tick-btn { color: var(--text3); }
   .icon-btn.tick-btn.enabled {
     color: var(--accent);
     background: rgba(232,255,71,0.08);
   }
   .icon-btn.tick-btn.enabled:hover { background: rgba(232,255,71,0.15); }
-
+ 
   .icon-btn.edit-btn:hover { color: var(--accent2); background: rgba(255,107,53,0.1); }
-
+ 
   /* MODAL OVERLAY */
   .modal-overlay {
     position: fixed;
@@ -341,7 +341,7 @@
     padding: 20px;
   }
   .modal-overlay.open { display: flex; }
-
+ 
   .modal {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -352,12 +352,12 @@
     position: relative;
     animation: modalIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
-
+ 
   @keyframes modalIn {
     from { opacity: 0; transform: scale(0.92) translateY(20px); }
     to { opacity: 1; transform: scale(1) translateY(0); }
   }
-
+ 
   .modal-title {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 1.8rem;
@@ -366,7 +366,7 @@
     color: var(--text);
   }
   .modal-title span { color: var(--accent); }
-
+ 
   .modal-close {
     position: absolute;
     top: 20px;
@@ -385,11 +385,11 @@
     transition: all 0.15s;
   }
   .modal-close:hover { color: var(--text); border-color: var(--text3); }
-
+ 
   .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
   .modal-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 16px; }
   .modal-full { margin-bottom: 14px; }
-
+ 
   .modal-footer {
     display: flex;
     justify-content: space-between;
@@ -398,7 +398,7 @@
     padding-top: 20px;
     border-top: 1px solid var(--border);
   }
-
+ 
   /* TAGS (used in Plan / History) */
   .tag {
     font-family: 'DM Mono', monospace;
@@ -410,7 +410,7 @@
   }
   .tag-muscle { background: rgba(232, 255, 71, 0.1); color: var(--accent); }
   .tag-equip  { background: rgba(255, 107, 53, 0.1); color: var(--accent2); }
-
+ 
   /* INPUTS */
   input, select, textarea {
     background: var(--surface2);
@@ -431,11 +431,11 @@
   input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
   input[type="number"] { -moz-appearance: textfield; }
   label { font-size: 0.75rem; color: var(--text2); margin-bottom: 6px; display: block; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.08em; }
-
+ 
   .form-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
   .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .field { margin-bottom: 12px; }
-
+ 
   /* BUTTONS */
   .btn {
     display: inline-flex;
@@ -451,25 +451,25 @@
     cursor: pointer;
     transition: all 0.2s;
   }
-
+ 
   .btn-primary { background: var(--accent); color: #000; font-weight: 500; }
   .btn-primary:hover { background: #d4eb00; transform: translateY(-1px); }
-
+ 
   .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
   .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
-
+ 
   .btn-danger { background: rgba(255,71,71,0.1); color: var(--danger); border: 1px solid rgba(255,71,71,0.2); }
   .btn-danger:hover { background: rgba(255,71,71,0.2); }
-
+ 
   .btn-sm { padding: 6px 12px; font-size: 0.65rem; }
-
+ 
   /* SETS TABLE (kept for potential future use) */
   .sets-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 16px;
   }
-
+ 
   .sets-table th {
     text-align: left;
     font-family: 'DM Mono', monospace;
@@ -480,13 +480,13 @@
     padding: 8px 12px;
     border-bottom: 1px solid var(--border);
   }
-
+ 
   .sets-table td {
     padding: 8px 12px;
     border-bottom: 1px solid var(--border);
     font-size: 0.85rem;
   }
-
+ 
   .sets-table td input {
     background: var(--surface2);
     border: 1px solid transparent;
@@ -495,18 +495,18 @@
     border-radius: 6px;
     font-size: 0.85rem;
   }
-
+ 
   .sets-table td input:focus { border-color: var(--accent); }
-
+ 
   .sets-table tr:hover td { background: rgba(255,255,255,0.01); }
-
+ 
   .set-number {
     font-family: 'DM Mono', monospace;
     font-size: 0.7rem;
     color: var(--text3);
     width: 40px;
   }
-
+ 
   /* HISTORY */
   .session-card {
     background: var(--surface);
@@ -518,21 +518,21 @@
     transition: all 0.2s;
   }
   .session-card:hover { border-color: var(--accent); }
-
+ 
   .session-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 12px;
   }
-
+ 
   .session-date {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 1.4rem;
     letter-spacing: 0.05em;
     color: var(--accent);
   }
-
+ 
   .session-duration {
     font-family: 'DM Mono', monospace;
     font-size: 0.7rem;
@@ -541,13 +541,13 @@
     padding: 4px 10px;
     border-radius: 6px;
   }
-
+ 
   .session-exercises {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
   }
-
+ 
   .session-ex-pill {
     background: var(--surface2);
     border-radius: 6px;
@@ -555,7 +555,7 @@
     font-size: 0.75rem;
     color: var(--text2);
   }
-
+ 
   /* PLAN SECTION */
   .time-input-big {
     text-align: center;
@@ -572,7 +572,7 @@
     outline: none;
   }
   .time-input-big:focus { border-color: var(--accent); }
-
+ 
   /* MUSCLE CHIP SELECTOR */
   .muscle-chips {
     display: flex;
@@ -580,7 +580,7 @@
     gap: 8px;
     margin-top: 4px;
   }
-
+ 
   .muscle-chip {
     border: 2px solid var(--border);
     border-radius: 10px;
@@ -595,43 +595,43 @@
     background: var(--surface2);
     user-select: none;
   }
-
+ 
   .muscle-chip:hover { border-color: var(--text2); color: var(--text); }
-
+ 
   .muscle-chip.selected {
     border-color: var(--accent);
     background: rgba(232,255,71,0.1);
     color: var(--accent);
   }
-
+ 
   .muscle-chip.similar {
     border-style: dashed;
     border-color: var(--accent3);
     color: var(--accent3);
   }
-
+ 
   .muscle-chip.similar.selected {
     background: rgba(71,255,184,0.1);
     border-style: solid;
   }
-
+ 
   .muscle-chip.different {
     border-style: dashed;
     border-color: var(--accent2);
     color: var(--accent2);
   }
-
+ 
   .muscle-chip.different.selected {
     background: rgba(255,107,53,0.1);
     border-style: solid;
   }
-
+ 
   .muscle-chip.plan-mode-chip {
     font-size: 0.78rem;
     padding: 10px 18px;
     border-radius: 10px;
   }
-
+ 
   /* ROUTINE DISPLAY */
   .routine-exercise {
     background: var(--surface);
@@ -645,9 +645,9 @@
     align-items: center;
     transition: all 0.2s;
   }
-
+ 
   .routine-exercise:hover { border-color: var(--surface3); }
-
+ 
   .routine-ex-num {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 1.8rem;
@@ -655,17 +655,17 @@
     width: 36px;
     text-align: center;
   }
-
+ 
   .routine-ex-name { font-size: 0.95rem; font-weight: 500; }
   .routine-ex-tags { display: flex; gap: 6px; margin-top: 4px; }
-
+ 
   .routine-ex-sets {
     font-family: 'DM Mono', monospace;
     font-size: 0.7rem;
     color: var(--text2);
     text-align: right;
   }
-
+ 
   .routine-ex-time {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 1.4rem;
@@ -673,7 +673,7 @@
     min-width: 60px;
     text-align: right;
   }
-
+ 
   .plan-summary {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -685,14 +685,14 @@
     gap: 16px;
     text-align: center;
   }
-
+ 
   .plan-stat-num {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 2.5rem;
     color: var(--accent);
     line-height: 1;
   }
-
+ 
   .plan-stat-label {
     font-family: 'DM Mono', monospace;
     font-size: 0.65rem;
@@ -701,7 +701,7 @@
     text-transform: uppercase;
     margin-top: 4px;
   }
-
+ 
   /* TOAST */
   .toast {
     position: fixed;
@@ -720,7 +720,7 @@
     z-index: 9999;
   }
   .toast.show { transform: translateY(0); opacity: 1; }
-
+ 
   /* EMPTY STATE */
   .empty-state {
     text-align: center;
@@ -729,7 +729,7 @@
   }
   .empty-state-icon { font-size: 3rem; margin-bottom: 16px; }
   .empty-state p { font-family: 'DM Mono', monospace; font-size: 0.8rem; }
-
+ 
   /* STATUS BAR */
   .status-bar {
     background: var(--surface);
@@ -746,16 +746,16 @@
   }
   .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
   @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-
+ 
   .divider { width: 1px; height: 12px; background: var(--border); }
-
+ 
   hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
-
+ 
   .flex-between { display: flex; justify-content: space-between; align-items: center; }
   .flex-gap { display: flex; gap: 12px; align-items: center; }
   .mt-16 { margin-top: 16px; }
   .mb-16 { margin-bottom: 16px; }
-
+ 
   /* LOG HISTORY within Log panel */
   .log-history-item {
     background: var(--surface2);
@@ -763,16 +763,16 @@
     padding: 12px 16px;
     margin-bottom: 8px;
   }
-
+ 
   .log-history-header {
     display: flex;
     justify-content: space-between;
     margin-bottom: 8px;
   }
-
+ 
   .log-history-name { font-weight: 500; font-size: 0.85rem; }
   .log-history-date { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--text3); }
-
+ 
   .set-chips { display: flex; flex-wrap: wrap; gap: 6px; }
   .set-chip {
     background: var(--surface3);
@@ -783,7 +783,7 @@
     color: var(--text2);
   }
   .set-chip span { color: var(--accent); }
-
+ 
   /* DIFFICULTY PICKER */
   .difficulty-picker {
     display: flex;
@@ -791,7 +791,7 @@
     margin: 10px 0 6px;
     flex-wrap: wrap;
   }
-
+ 
   .diff-btn {
     width: 38px;
     height: 38px;
@@ -808,16 +808,16 @@
     align-items: center;
     justify-content: center;
   }
-
+ 
   .diff-btn:hover { border-color: var(--accent); color: var(--accent); }
-
+ 
   .diff-btn.selected {
     border-color: var(--accent);
     background: var(--accent);
     color: #000;
     transform: scale(1.08);
   }
-
+ 
   .difficulty-label {
     font-family: 'DM Mono', monospace;
     font-size: 0.7rem;
@@ -825,7 +825,7 @@
     min-height: 18px;
     transition: color 0.2s;
   }
-
+ 
   /* SESSION CARD UPGRADES */
   .session-feedback-row {
     display: flex;
@@ -836,7 +836,7 @@
     border-top: 1px solid var(--border);
     flex-wrap: wrap;
   }
-
+ 
   .session-diff-badge {
     display: flex;
     align-items: center;
@@ -845,13 +845,13 @@
     font-size: 0.7rem;
     color: var(--text2);
   }
-
+ 
   .session-diff-num {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 1.4rem;
     line-height: 1;
   }
-
+ 
   .session-remarks {
     font-size: 0.8rem;
     color: var(--text2);
@@ -862,7 +862,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-
+ 
   .session-add-feedback {
     font-family: 'DM Mono', monospace;
     font-size: 0.65rem;
@@ -876,14 +876,14 @@
     transition: all 0.15s;
     text-transform: uppercase;
   }
-
+ 
   .session-add-feedback:hover { border-color: var(--accent); color: var(--accent); }
-
+ 
   /* Scrollbar */
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-
+ 
   /* ─── AUTH SCREEN ───────────────────────────────────────────────── */
   #auth-screen {
     min-height: 100vh;
@@ -892,7 +892,7 @@
     justify-content: center;
     padding: 24px 16px;
   }
-
+ 
   .auth-box {
     width: 100%;
     max-width: 420px;
@@ -903,7 +903,7 @@
     position: relative;
     animation: modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
   }
-
+ 
   .auth-logo {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 3rem;
@@ -912,7 +912,7 @@
     line-height: 1;
     margin-bottom: 4px;
   }
-
+ 
   .auth-tagline {
     font-family: 'DM Mono', monospace;
     font-size: 0.65rem;
@@ -921,7 +921,7 @@
     text-transform: uppercase;
     margin-bottom: 32px;
   }
-
+ 
   .auth-tabs {
     display: flex;
     background: var(--surface2);
@@ -930,7 +930,7 @@
     margin-bottom: 28px;
     gap: 4px;
   }
-
+ 
   .auth-tab {
     flex: 1;
     text-align: center;
@@ -946,13 +946,13 @@
     border: none;
     background: none;
   }
-
+ 
   .auth-tab.active {
     background: var(--accent);
     color: #000;
     font-weight: 500;
   }
-
+ 
   .auth-error {
     background: rgba(255,71,71,0.1);
     border: 1px solid rgba(255,71,71,0.3);
@@ -964,9 +964,9 @@
     margin-bottom: 16px;
     display: none;
   }
-
+ 
   .auth-error.show { display: block; }
-
+ 
   .auth-success {
     background: rgba(71,255,184,0.1);
     border: 1px solid rgba(71,255,184,0.3);
@@ -978,9 +978,9 @@
     margin-bottom: 16px;
     display: none;
   }
-
+ 
   .auth-success.show { display: block; }
-
+ 
   .auth-footer-note {
     margin-top: 20px;
     text-align: center;
@@ -989,7 +989,7 @@
     color: var(--text3);
     line-height: 1.6;
   }
-
+ 
   /* ─── SETTINGS PANEL ────────────────────────────────────────────── */
   .settings-section {
     background: var(--surface);
@@ -998,7 +998,7 @@
     padding: 24px;
     margin-bottom: 16px;
   }
-
+ 
   .settings-label {
     font-family: 'DM Mono', monospace;
     font-size: 0.65rem;
@@ -1007,7 +1007,7 @@
     text-transform: uppercase;
     margin-bottom: 16px;
   }
-
+ 
   .settings-row {
     display: flex;
     justify-content: space-between;
@@ -1015,11 +1015,11 @@
     padding: 12px 0;
     border-bottom: 1px solid var(--border);
   }
-
+ 
   .settings-row:last-child { border-bottom: none; }
   .settings-row-label { font-size: 0.88rem; color: var(--text2); }
   .settings-row-value { font-size: 0.88rem; font-weight: 500; font-family: 'DM Mono', monospace; }
-
+ 
   .user-avatar {
     width: 56px;
     height: 56px;
@@ -1033,14 +1033,14 @@
     color: #000;
     flex-shrink: 0;
   }
-
+ 
   @media (max-width: 640px) {
     .auth-box { padding: 28px 20px; }
     .auth-logo { font-size: 2.4rem; }
   }
-
+ 
   @media (max-width: 640px) {
-
+ 
     /* HEADER: stack logo + nav vertically */
     header {
       flex-direction: column;
@@ -1050,7 +1050,7 @@
     }
     .logo { font-size: 1.5rem; }
     .logo span { font-size: 0.62rem; letter-spacing: 0.06em; }
-
+ 
     /* NAV: full-width equal tabs */
     nav { width: 100%; border-radius: 10px; }
     nav button {
@@ -1061,32 +1061,32 @@
       text-align: center;
       white-space: nowrap;
     }
-
+ 
     /* MAIN */
     main { padding: 14px; }
-
+ 
     /* SECTION HEADERS */
     .section-header { margin-bottom: 18px; }
     .section-header h2 { font-size: 2rem; }
     .section-header p { font-size: 0.82rem; margin-top: 6px; }
-
+ 
     /* CARDS */
     .card { padding: 14px; border-radius: 12px; }
     .card-label { font-size: 0.72rem; letter-spacing: 0.14em; }
-
+ 
     /* GRIDS → single column on mobile */
     .grid-2, .grid-3 { grid-template-columns: 1fr; gap: 10px; }
-
+ 
     /* ── LIBRARY ── */
     .lib-header { flex-direction: column; align-items: flex-start; gap: 10px; margin-bottom: 16px; }
     .lib-header .btn { width: 100%; justify-content: center; padding: 12px 16px; }
-
+ 
     .muscle-tab { font-size: 0.74rem; padding: 8px 12px; }
     .lib-filter-row { gap: 6px; margin-bottom: 16px; }
-
+ 
     .muscle-section-title { font-size: 1rem; }
     .muscle-section-count { font-size: 0.72rem; }
-
+ 
     /* Exercise table: hide equipment column on mobile, keep name/sets/total/actions */
     .ex-table thead th { font-size: 0.68rem; padding: 8px 8px; }
     .ex-table td { padding: 12px 8px; font-size: 0.88rem; }
@@ -1096,10 +1096,10 @@
     .ex-table td.col-num { font-size: 0.8rem; }
     .ex-table td.col-total { font-size: 1rem; }
     .ex-table td.col-actions { width: 72px; padding-right: 8px; }
-
+ 
     /* Bigger tap targets for icon buttons */
     .icon-btn { width: 36px; height: 36px; font-size: 1rem; }
-
+ 
     /* ── MODAL ── */
     .modal-overlay { align-items: flex-end; padding: 0; }
     .modal {
@@ -1117,7 +1117,7 @@
     .modal-footer .btn { flex: 1; justify-content: center; padding: 13px 16px; font-size: 0.78rem; }
     #modal-delete-btn { width: 100%; justify-content: center; padding: 13px 16px; font-size: 0.78rem; }
     .modal-close { width: 36px; height: 36px; font-size: 1.1rem; top: 16px; right: 16px; }
-
+ 
     /* ── INPUTS / LABELS ── */
     input, select, textarea {
       font-size: 1rem;         /* prevents iOS zoom on focus */
@@ -1126,16 +1126,16 @@
     }
     label { font-size: 0.74rem; margin-bottom: 5px; }
     .field { margin-bottom: 14px; }
-
+ 
     /* ── BUTTONS ── */
     .btn { font-size: 0.76rem; padding: 12px 18px; border-radius: 9px; }
     .btn-sm { font-size: 0.72rem; padding: 9px 12px; }
-
+ 
     /* ── PLAN ── */
     .time-input-big { font-size: 3.2rem; padding: 16px; border-radius: 12px; }
     .muscle-chip { font-size: 0.78rem; padding: 10px 14px; border-radius: 9px; }
     .muscle-chips { gap: 7px; }
-
+ 
     .plan-summary {
       grid-template-columns: 1fr 1fr;
       gap: 10px;
@@ -1145,7 +1145,7 @@
     }
     .plan-stat-num { font-size: 2.2rem; }
     .plan-stat-label { font-size: 0.68rem; }
-
+ 
     /* Routine rows: 3-col (num | info | time) */
     .routine-exercise {
       grid-template-columns: auto 1fr auto;
@@ -1157,18 +1157,18 @@
     .routine-ex-tags { flex-wrap: wrap; gap: 4px; }
     .routine-ex-sets { font-size: 0.74rem; display: none; } /* folded into next col */
     .routine-ex-time { font-size: 1.3rem; min-width: 48px; }
-
+ 
     /* Generate & Save buttons stacked */
     .flex-gap.mb-16 { flex-direction: column; gap: 8px; }
     .flex-gap.mb-16 .btn { width: 100%; justify-content: center; }
-
+ 
     /* ── STATUS BAR ── */
     .status-bar { font-size: 0.74rem; padding: 10px 12px; flex-wrap: wrap; gap: 6px; }
     .divider { display: none; }
-
+ 
     /* ── TAGS ── */
     .tag { font-size: 0.64rem; padding: 3px 7px; }
-
+ 
     /* ── HISTORY ── */
     .session-card { padding: 14px; border-radius: 12px; }
     .session-date { font-size: 1.3rem; }
@@ -1178,12 +1178,12 @@
     .session-diff-num { font-size: 1.4rem; }
     .session-remarks { font-size: 0.82rem; }
     .session-add-feedback { font-size: 0.7rem; padding: 7px 12px; }
-
+ 
     /* ── DIFFICULTY PICKER ── */
     .difficulty-picker { gap: 7px; }
     .diff-btn { width: 46px; height: 46px; font-size: 1.05rem; }
     .difficulty-label { font-size: 0.8rem; margin-top: 6px; }
-
+ 
     /* ── TOAST ── */
     .toast {
       bottom: 16px;
@@ -1193,12 +1193,12 @@
       text-align: center;
       padding: 13px 16px;
     }
-
+ 
     /* ── ROUTINE EDIT MODAL ── */
     #routine-edit-modal .modal { border-radius: 20px 20px 0 0; }
     #routine-edit-list > div { font-size: 0.88rem; }
   }
-
+ 
   /* ── TABLET: 641–900px — light adjustments only ── */
   @media (min-width: 641px) and (max-width: 900px) {
     header { padding: 16px 20px; }
@@ -1209,7 +1209,7 @@
     .plan-summary { grid-template-columns: repeat(4, 1fr); }
     .routine-exercise { grid-template-columns: auto 1fr auto auto; }
   }
-
+ 
   /* ─── TIMETABLE ─────────────────────────────────────────────────── */
   .tt-workout-card {
     background: var(--surface);
@@ -1221,7 +1221,7 @@
   }
   .tt-workout-card.is-today { border-color: var(--accent); }
   .tt-workout-card.is-completed { border-color: var(--accent3); opacity: 0.7; }
-
+ 
   .tt-date-badge {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 1.1rem;
@@ -1259,25 +1259,25 @@
     transition: all 0.2s;
   }
   .btn-complete:hover { background: rgba(232,255,71,0.2); }
-
+ 
 </style>
 </head>
 <body>
-
+ 
 <!-- AUTH SCREEN -->
 <div id="auth-screen" style="display:none">
   <div class="auth-box">
     <div class="auth-logo">Gymini</div>
     <div class="auth-tagline">AI personal trainer for time-stretched fitspos</div>
-
+ 
     <div class="auth-tabs">
       <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Sign In</button>
       <button class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Register</button>
     </div>
-
+ 
     <div id="auth-error" class="auth-error"></div>
     <div id="auth-success" class="auth-success"></div>
-
+ 
     <!-- LOGIN FORM -->
     <div id="form-login">
       <div class="field">
@@ -1292,7 +1292,7 @@
         Sign In
       </button>
     </div>
-
+ 
     <!-- REGISTER FORM -->
     <div id="form-register" style="display:none">
       <div class="field">
@@ -1315,14 +1315,14 @@
         Create Account
       </button>
     </div>
-
+ 
     <div class="auth-footer-note">
       Your data is private and only accessible to you.<br>
       Powered by Supabase · Gymini
     </div>
   </div>
 </div>
-
+ 
 <header id="app-header" style="display:none">
   <div class="logo">
     Gymini
@@ -1340,14 +1340,14 @@
     <div id="user-badge" style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--text3);letter-spacing:0.06em;white-space:nowrap;display:none"></div>
   </div>
 </header>
-
+ 
 <div id="app-loading" style="display:flex;align-items:center;justify-content:center;height:60vh;flex-direction:column;gap:16px">
   <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--accent);letter-spacing:0.15em;animation:pulse 1.5s infinite">GYMINI</div>
   <div style="font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--text3);letter-spacing:0.15em;text-transform:uppercase">Loading your data…</div>
 </div>
-
+ 
 <main id="app-main" style="display:none">
-
+ 
   <!-- LIBRARY -->
   <div id="panel-library" class="panel active">
     <div class="lib-header">
@@ -1357,17 +1357,17 @@
       </div>
       <button class="btn btn-primary" onclick="openAddModal()">+ Add New Exercise</button>
     </div>
-
+ 
     <div id="muscle-tabs" class="lib-filter-row"></div>
     <div id="exercises-list"></div>
   </div>
-
+ 
   <!-- EDIT / ADD MODAL -->
   <div id="ex-modal" class="modal-overlay" onclick="if(event.target===this)closeModal()">
     <div class="modal">
       <button class="modal-close" onclick="closeModal()">✕</button>
       <div class="modal-title" id="modal-title">Edit <span>Exercise</span></div>
-
+ 
       <div class="modal-full field">
         <label>Exercise Name</label>
         <input id="modal-name" type="text" placeholder="e.g. Cable Fly">
@@ -1396,7 +1396,7 @@
           <input id="modal-duration" type="number" min="0.5" max="60" step="0.5" value="2.5">
         </div>
       </div>
-
+ 
       <div class="modal-footer">
         <button class="btn btn-danger" id="modal-delete-btn" onclick="deleteExerciseFromModal()" style="display:none">🗑 Delete Exercise</button>
         <div style="display:flex;gap:10px;margin-left:auto">
@@ -1406,14 +1406,14 @@
       </div>
     </div>
   </div>
-
+ 
   <!-- PLAN -->
   <div id="panel-plan" class="panel">
     <div class="section-header">
       <h2>Plan <span>Session</span></h2>
       <p>Pick your muscles, choose a mode, and generate your routine</p>
     </div>
-
+ 
     <div class="grid-2" style="margin-bottom:16px">
       <div class="card">
         <div class="card-label">Available Time</div>
@@ -1425,31 +1425,31 @@
         <div id="muscle-chips" class="muscle-chips"></div>
       </div>
     </div>
-
+ 
     <div class="card" style="margin-bottom:16px">
       <div class="card-label">Step 2 — Session Mode</div>
       <div id="plan-mode-chips" class="muscle-chips"></div>
     </div>
-
+ 
     <div id="plan-context-area"></div>
-
+ 
     <div class="flex-gap mb-16" style="margin-top:8px">
       <button class="btn btn-primary" onclick="generatePlan()">⚡ Generate Routine</button>
       <button class="btn btn-secondary" onclick="savePlanAsSession()">✓ Save & Log This Session</button>
     </div>
-
+ 
     <div id="plan-output"></div>
   </div>
-
+ 
   <!-- ROUTINE EDIT MODAL -->
   <div id="routine-edit-modal" class="modal-overlay" onclick="if(event.target===this)closeRoutineModal()">
     <div class="modal" style="max-width:560px;max-height:85vh;overflow-y:auto">
       <button class="modal-close" onclick="closeRoutineModal()">✕</button>
       <div class="modal-title">Edit <span>Routine</span></div>
       <div style="font-size:0.8rem;color:var(--text2);margin-bottom:20px;font-family:'DM Mono',monospace;">Add, remove, or swap exercises. Changes apply to this session only.</div>
-
+ 
       <div id="routine-edit-list"></div>
-
+ 
       <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
         <div class="card-label" style="margin-bottom:10px">Add Exercise to Routine</div>
         <div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end">
@@ -1460,14 +1460,14 @@
           <button class="btn btn-primary" onclick="addExerciseToRoutine()">+ Add</button>
         </div>
       </div>
-
+ 
       <div class="modal-footer" style="justify-content:flex-end;margin-top:16px">
         <button class="btn btn-secondary" onclick="closeRoutineModal()">Cancel</button>
         <button class="btn btn-primary" onclick="applyRoutineEdits()" style="margin-left:10px">Apply Changes</button>
       </div>
     </div>
   </div>
-
+ 
   <!-- HISTORY -->
   <div id="panel-history" class="panel">
     <div class="section-header">
@@ -1476,39 +1476,39 @@
     </div>
     <div id="history-area"></div>
   </div>
-
+ 
   <!-- SESSION FEEDBACK MODAL -->
   <div id="feedback-modal" class="modal-overlay" onclick="if(event.target===this)closeFeedbackModal()">
     <div class="modal" style="max-width:480px">
       <button class="modal-close" onclick="closeFeedbackModal()">✕</button>
       <div class="modal-title">Session <span>Feedback</span></div>
-
+ 
       <div class="field" style="margin-bottom:20px">
         <label>How difficult was this workout?</label>
         <div id="difficulty-picker" class="difficulty-picker"></div>
         <div id="difficulty-label" class="difficulty-label">Tap a number to rate</div>
       </div>
-
+ 
       <div class="field">
         <label>Remarks</label>
         <textarea id="remarks-input" rows="4" placeholder="How did it go? Any PRs, what felt strong, what was tough, how was your energy level…"></textarea>
       </div>
-
+ 
       <div class="modal-footer" style="justify-content:flex-end">
         <button class="btn btn-secondary" onclick="closeFeedbackModal()">Cancel</button>
         <button class="btn btn-primary" onclick="saveFeedback()" style="margin-left:10px">Save Feedback</button>
       </div>
     </div>
   </div>
-
-
+ 
+ 
   <!-- TIMETABLE -->
   <div id="panel-timetable" class="panel">
     <div class="section-header">
       <h2>Plan <span>Timetable</span></h2>
       <p>Gymini auto-generates and emails your routines on schedule</p>
     </div>
-
+ 
     <!-- Enable toggle card -->
     <div class="settings-section" style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:16px">
       <div>
@@ -1520,11 +1520,11 @@
         <div id="tt-toggle-knob" style="position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--text3);transition:all 0.25s"></div>
       </div>
     </div>
-
+ 
     <!-- Config card -->
     <div class="settings-section" style="margin-bottom:16px" id="tt-config-card">
       <div class="settings-label">Schedule Preferences</div>
-
+ 
       <div class="grid-2" style="margin-bottom:20px">
         <div>
           <label style="font-size:0.75rem;color:var(--text2);display:block;margin-bottom:8px">Every how many days?</label>
@@ -1545,7 +1545,7 @@
           </div>
         </div>
       </div>
-
+ 
       <div>
         <label style="font-size:0.75rem;color:var(--text2);display:block;margin-bottom:10px">
           Muscle groups to include
@@ -1554,24 +1554,24 @@
         <div id="tt-muscle-chips" class="muscle-chips"></div>
       </div>
     </div>
-
+ 
     <!-- Next scheduled workout -->
     <div id="tt-next-card" style="display:none" class="settings-section" style="margin-bottom:16px">
       <div class="settings-label">Next Scheduled Workout</div>
       <div id="tt-next-content"></div>
     </div>
-
+ 
     <!-- Upcoming + history list -->
     <div id="tt-history-area"></div>
   </div>
-
+ 
   <!-- SETTINGS -->
   <div id="panel-settings" class="panel">
     <div class="section-header">
       <h2>Account <span>Settings</span></h2>
       <p>Manage your profile and preferences</p>
     </div>
-
+ 
     <!-- Profile card -->
     <div class="settings-section" style="margin-bottom:16px">
       <div class="settings-label">Profile</div>
@@ -1591,7 +1591,7 @@
         <span class="settings-row-value" id="settings-created">—</span>
       </div>
     </div>
-
+ 
     <!-- Stats card -->
     <div class="settings-section" style="margin-bottom:16px">
       <div class="settings-label">Your Data</div>
@@ -1608,7 +1608,7 @@
         <span class="settings-row-value" id="settings-enabled-count">—</span>
       </div>
     </div>
-
+ 
     <!-- Change password -->
     <div class="settings-section" style="margin-bottom:16px">
       <div class="settings-label">Change Password</div>
@@ -1623,7 +1623,7 @@
       <div id="pw-change-msg" style="font-family:'DM Mono',monospace;font-size:0.72rem;margin-bottom:10px;display:none"></div>
       <button class="btn btn-secondary" onclick="handleChangePassword()">Update Password</button>
     </div>
-
+ 
     <!-- Danger zone -->
     <div class="settings-section" style="border-color:rgba(255,71,71,0.2)">
       <div class="settings-label" style="color:var(--danger)">Account</div>
@@ -1632,32 +1632,32 @@
       </button>
     </div>
   </div>
-
+ 
 </main>
-
+ 
 <div id="toast" class="toast"></div>
-
+ 
 <script>
 // ─── SUPABASE + AUTH ────────────────────────────────────────────────────────
-
+ 
 const SUPABASE_URL = 'https://zfugjdedlxcdjhbyrzth.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpmdWdqZGVkbHhjZGpoYnlyenRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyOTQ1MjcsImV4cCI6MjA4ODg3MDUyN30.IwcMrz3Rjoyf0TE7MpiclqVgoH99olTI139f0lUfcEw';
-
+ 
 let sbClient = null;
 let currentUser = null;
-
+ 
 function getSupabaseConfig() {
   // Credentials baked in - no manual setup needed
   return { url: SUPABASE_URL, key: SUPABASE_ANON_KEY };
 }
-
+ 
 function initSupabase(url, key) {
   sbClient = window.supabase.createClient(url, key);
 }
-
-
+ 
+ 
 // ─── STATE ──────────────────────────────────────────────────────────────────
-
+ 
 const DEFAULT_EXERCISES = [
   // Chest
   { id:'e1', name:'Bench Press', muscle:'Chest', equipment:'Barbell', sets:4, duration:3 },
@@ -1709,7 +1709,7 @@ const DEFAULT_EXERCISES = [
   { id:'e39', name:'Rowing Machine', muscle:'Cardio', equipment:'Rowing Machine', sets:1, duration:15 },
   { id:'e40', name:'Stationary Bike', muscle:'Cardio', equipment:'Bike', sets:1, duration:20 },
 ];
-
+ 
 function freshState() {
   return {
     exercises: JSON.parse(JSON.stringify(DEFAULT_EXERCISES)),
@@ -1719,11 +1719,11 @@ function freshState() {
     deletedDefaults: [],  // IDs of built-in exercises the user has intentionally deleted
   };
 }
-
+ 
 let state = null;
-
+ 
 // ─── SAVE / LOAD via SUPABASE ────────────────────────────────────────────────
-
+ 
 // Save indicator helpers
 function showSaveIndicator(status) {
   let el = document.getElementById('save-indicator');
@@ -1740,10 +1740,10 @@ function showSaveIndicator(status) {
     el.style.color = 'var(--danger)';
   }
 }
-
+ 
 let _saveTimer = null;
 let _pendingSave = false;
-
+ 
 // Debounced save — batches rapid changes into one DB write
 function saveState() {
   if (!sbClient || !currentUser) return;
@@ -1754,12 +1754,12 @@ function saveState() {
   clearTimeout(_saveTimer);
   _saveTimer = setTimeout(() => _flushSave(), 600);
 }
-
+ 
 async function _flushSave(retries = 3) {
   if (!_pendingSave || !sbClient || !currentUser) return;
   _pendingSave = false;
   showSaveIndicator('saving');
-
+ 
   const payload = {
     user_id: currentUser.id,
     exercises: state.exercises,
@@ -1768,44 +1768,44 @@ async function _flushSave(retries = 3) {
     next_id: state.nextId,
     deleted_defaults: state.deletedDefaults || [],
   };
-
+ 
   for (let attempt = 1; attempt <= retries; attempt++) {
     const { error } = await sbClient.from('user_data')
       .upsert(payload, { onConflict: 'user_id' });
-
+ 
     if (!error) {
       showSaveIndicator('saved');
       return;
     }
-
+ 
     console.error(`saveState attempt ${attempt} failed:`, error.message);
     if (attempt < retries) await new Promise(r => setTimeout(r, 800 * attempt));
   }
-
+ 
   // All retries failed — mark as error and re-queue
   showSaveIndicator('error');
   _pendingSave = true;
   _saveTimer = setTimeout(() => _flushSave(), 5000); // retry in 5s
 }
-
+ 
 async function _hasUserRecord() {
   if (!sbClient || !currentUser) return false;
   const { data } = await sbClient.from('user_data').select('user_id').eq('user_id', currentUser.id).maybeSingle();
   return !!data;
 }
-
+ 
 async function loadUserData() {
   if (!sbClient || !currentUser) return null;
-
+ 
   // Try remote first
   const { data, error } = await sbClient
     .from('user_data')
     .select('exercises, enabled, sessions, next_id, username, created_at, deleted_defaults')
     .eq('user_id', currentUser.id)
     .single();
-
+ 
   if (!error && data) return data;
-
+ 
   // PGRST116 = no rows found (new user) — not a real error
   if (error && error.code !== 'PGRST116') {
     console.error('loadUserData remote error:', error.message);
@@ -1823,10 +1823,10 @@ async function loadUserData() {
       }
     } catch(e) {}
   }
-
+ 
   return data || null;
 }
-
+ 
 async function createUserRecord(username) {
   if (!sbClient || !currentUser) return;
   const initial = freshState();
@@ -1841,26 +1841,26 @@ async function createUserRecord(username) {
   });
   if (error) console.error('createUserRecord error:', error.message);
 }
-
+ 
 // ─── AUTH HANDLERS ───────────────────────────────────────────────────────────
-
+ 
 function showAuthError(msg) {
   const el = document.getElementById('auth-error');
   el.textContent = msg;
   el.classList.add('show');
 }
-
+ 
 function showAuthSuccess(msg) {
   const el = document.getElementById('auth-success');
   el.textContent = msg;
   el.classList.add('show');
 }
-
+ 
 function clearAuthMessages() {
   document.getElementById('auth-error').classList.remove('show');
   document.getElementById('auth-success').classList.remove('show');
 }
-
+ 
 function switchAuthTab(tab) {
   clearAuthMessages();
   document.getElementById('tab-login').classList.toggle('active', tab === 'login');
@@ -1868,29 +1868,29 @@ function switchAuthTab(tab) {
   document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
   document.getElementById('form-register').style.display = tab === 'register' ? 'block' : 'none';
 }
-
+ 
 async function handleLogin() {
   clearAuthMessages();
   const email = document.getElementById('login-email').value.trim();
   const password = document.getElementById('login-password').value;
   const btn = document.getElementById('login-btn');
-
+ 
   if (!email || !password) { showAuthError('Please fill in all fields.'); return; }
-
+ 
   btn.textContent = 'Signing in…';
   btn.disabled = true;
-
+ 
   const { data, error } = await sbClient.auth.signInWithPassword({ email, password });
-
+ 
   btn.textContent = 'Sign In';
   btn.disabled = false;
-
+ 
   if (error) { showAuthError(error.message); return; }
-
+ 
   currentUser = data.user;
   await enterApp();
 }
-
+ 
 async function handleRegister() {
   clearAuthMessages();
   const username = document.getElementById('reg-username').value.trim();
@@ -1898,16 +1898,16 @@ async function handleRegister() {
   const password = document.getElementById('reg-password').value;
   const confirm = document.getElementById('reg-confirm').value;
   const btn = document.getElementById('register-btn');
-
+ 
   if (!username || !email || !password || !confirm) { showAuthError('Please fill in all fields.'); return; }
   if (username.length < 2) { showAuthError('Username must be at least 2 characters.'); return; }
   if (!/^[a-zA-Z0-9_.-]+$/.test(username)) { showAuthError('Username can only contain letters, numbers, _ . -'); return; }
   if (password.length < 6) { showAuthError('Password must be at least 6 characters.'); return; }
   if (password !== confirm) { showAuthError('Passwords do not match.'); return; }
-
+ 
   btn.textContent = 'Creating account…';
   btn.disabled = true;
-
+ 
   const { data, error } = await sbClient.auth.signUp({
     email,
     password,
@@ -1916,12 +1916,12 @@ async function handleRegister() {
       emailRedirectTo: 'https://manycroissants.github.io/gymini/',
     }
   });
-
+ 
   btn.textContent = 'Create Account';
   btn.disabled = false;
-
+ 
   if (error) { showAuthError(error.message); return; }
-
+ 
   // Supabase may return a session immediately (if email confirm disabled)
   // or require email confirmation first
   if (data.session) {
@@ -1936,7 +1936,7 @@ async function handleRegister() {
     showAuthSuccess('Almost there! Check your email and click the confirmation link to log in.');
   }
 }
-
+ 
 async function handleLogout() {
   const userId = currentUser?.id;
   if (sbClient) await sbClient.auth.signOut();
@@ -1953,17 +1953,17 @@ async function handleLogout() {
   document.getElementById('login-password').value = '';
   switchAuthTab('login');
 }
-
+ 
 async function handleChangePassword() {
   const pw = document.getElementById('new-password').value;
   const confirm = document.getElementById('confirm-new-password').value;
   const msgEl = document.getElementById('pw-change-msg');
   msgEl.style.display = 'block';
-
+ 
   if (!pw || !confirm) { msgEl.style.color = 'var(--danger)'; msgEl.textContent = 'Please fill in both fields.'; return; }
   if (pw.length < 6) { msgEl.style.color = 'var(--danger)'; msgEl.textContent = 'Password must be at least 6 characters.'; return; }
   if (pw !== confirm) { msgEl.style.color = 'var(--danger)'; msgEl.textContent = 'Passwords do not match.'; return; }
-
+ 
   const { error } = await sbClient.auth.updateUser({ password: pw });
   if (error) {
     msgEl.style.color = 'var(--danger)';
@@ -1976,13 +1976,13 @@ async function handleChangePassword() {
     setTimeout(() => { msgEl.style.display = 'none'; }, 3000);
   }
 }
-
+ 
 // ─── ENTER APP (after auth) ──────────────────────────────────────────────────
-
+ 
 async function enterApp() {
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('app-loading').style.display = 'flex';
-
+ 
   try {
     // Check for pending username from email-confirmation signup flow
     const pendingUsername = localStorage.getItem('gymini_pending_username');
@@ -1990,10 +1990,10 @@ async function enterApp() {
       await createUserRecord(pendingUsername);
       localStorage.removeItem('gymini_pending_username');
     }
-
+ 
     const data = await loadUserData();
     const pendingUser = localStorage.getItem('gymini_pending_username'); // re-read in case cleared
-
+ 
     if (data) {
       state = {
         exercises: data.exercises || [],
@@ -2004,7 +2004,7 @@ async function enterApp() {
         _created_at: data.created_at || null,
         deletedDefaults: data.deleted_defaults || [],
       };
-
+ 
       // Add any new default exercises the user hasn't deleted
       const deletedSet = new Set(state.deletedDefaults);
       const existingIds = new Set(state.exercises.map(e => e.id));
@@ -2022,10 +2022,10 @@ async function enterApp() {
       state._created_at = currentUser.created_at || null;
       state.deletedDefaults = [];
     }
-
+ 
     document.getElementById('app-loading').style.display = 'none';
     showApp(true);
-
+ 
   } catch (err) {
     console.error('enterApp crashed:', err);
     document.getElementById('app-loading').innerHTML =
@@ -2036,7 +2036,7 @@ async function enterApp() {
       '</div>';
   }
 }
-
+ 
 function showApp(show) {
   document.getElementById('app-header').style.display = show ? 'flex' : 'none';
   document.getElementById('app-main').style.display = show ? 'block' : 'none';
@@ -2053,18 +2053,18 @@ function showApp(show) {
     switchPanel('library');
   }
 }
-
+ 
 // ─── INIT ────────────────────────────────────────────────────────────────────
-
+ 
 async function initApp() {
   const config = getSupabaseConfig();
   initSupabase(config.url, config.key);
-
+ 
   // In Supabase JS v2, onAuthStateChange fires immediately with the current session
   // on page load (INITIAL_SESSION event). This is the single correct entry point —
   // avoids the race condition where getSession() and onAuthStateChange both call enterApp().
   let appStarted = false;
-
+ 
   // Fallback: if onAuthStateChange never fires within 8s, show login screen
   const fallbackTimer = setTimeout(() => {
     if (!appStarted) {
@@ -2073,10 +2073,10 @@ async function initApp() {
       document.getElementById('auth-screen').style.display = 'flex';
     }
   }, 8000);
-
+ 
   sbClient.auth.onAuthStateChange(async (event, session) => {
     console.log('Auth event:', event, '| has session:', !!session);
-
+ 
     // INITIAL_SESSION = page load with existing session (normal case)
     // SIGNED_IN = page load after server restart OR after login/register
     // Both cases on first load should enter the app if session exists
@@ -2090,49 +2090,49 @@ async function initApp() {
         document.getElementById('app-loading').style.display = 'none';
         document.getElementById('auth-screen').style.display = 'flex';
       }
-
+ 
     } else if (event === 'SIGNED_IN' && appStarted) {
       // Fired after explicit login/register action — only if different user
       if (!currentUser || currentUser.id !== session.user.id) {
         currentUser = session.user;
         await enterApp();
       }
-
+ 
     } else if (event === 'SIGNED_OUT') {
       currentUser = null; state = null;
       ttConfig = null; ttWorkouts = []; ttMuscles = [];
       showApp(false);
-
+ 
     } else if (event === 'TOKEN_REFRESHED' && session) {
       currentUser = session.user;
-
+ 
     } else if (event === 'USER_UPDATED' && session) {
       currentUser = session.user;
     }
   });
 }
-
+ 
 // ─── UTILS ──────────────────────────────────────────────────────────────────
-
+ 
 function uid() { return 'x' + (state.nextId++); }
-
+ 
 function toast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2500);
 }
-
+ 
 function fmt(date) {
   return new Date(date).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
 }
-
+ 
 function enabledExercises() {
   return state.exercises.filter(e => state.enabled[e.id]);
 }
-
+ 
 // ─── NAV ────────────────────────────────────────────────────────────────────
-
+ 
 function switchPanel(id) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
@@ -2140,19 +2140,19 @@ function switchPanel(id) {
   // Highlight correct nav button
   const navBtns = document.querySelectorAll('nav button');
   navBtns.forEach(b => { if (b.textContent.toLowerCase().trim() === id || b.getAttribute('onclick')?.includes(`'${id}'`)) b.classList.add('active'); });
-
+ 
   if (id === 'library') renderLibrary();
   if (id === 'plan') renderPlan();
   if (id === 'history') renderHistory();
   if (id === 'settings') renderSettings();
   if (id === 'timetable') renderTimetable();
 }
-
+ 
 function renderSettings() {
   if (!currentUser || !state) return;
   const username = state._username || currentUser.email?.split('@')[0] || 'User';
   const initial = username.charAt(0).toUpperCase();
-
+ 
   document.getElementById('settings-avatar').textContent = initial;
   document.getElementById('settings-username').textContent = username;
   document.getElementById('settings-email').textContent = currentUser.email || '—';
@@ -2164,46 +2164,46 @@ function renderSettings() {
   document.getElementById('settings-enabled-count').textContent = enabledExercises().length;
   document.getElementById('pw-change-msg').style.display = 'none';
 }
-
+ 
 // ─── LIBRARY ────────────────────────────────────────────────────────────────
-
+ 
 let activeMusclTab = 'All';
 let modalMode = 'add'; // 'add' | 'edit'
 let modalEditId = null;
-
+ 
 function renderLibrary() {
   renderMuscleTabs();
   renderExerciseList();
   document.getElementById('enabled-count').textContent = enabledExercises().length;
 }
-
+ 
 function renderMuscleTabs() {
   const MUSCLES = ['All','Chest','Back','Shoulders','Biceps','Triceps','Legs','Core','Glutes','Cardio'];
   document.getElementById('muscle-tabs').innerHTML = MUSCLES.map(m => `
     <button class="muscle-tab ${m === activeMusclTab ? 'active' : ''}" onclick="setMuscleTab('${m}')">${m}</button>
   `).join('');
 }
-
+ 
 function setMuscleTab(m) {
   activeMusclTab = m;
   renderMuscleTabs();
   renderExerciseList();
 }
-
+ 
 function renderExerciseList() {
   const container = document.getElementById('exercises-list');
-
+ 
   // Determine which muscles to show
   const allMuscles = ['Chest','Back','Shoulders','Biceps','Triceps','Legs','Core','Glutes','Cardio'];
   const musclesToShow = activeMusclTab === 'All' ? allMuscles : [activeMusclTab];
-
+ 
   let html = '';
   for (const muscle of musclesToShow) {
     const exList = state.exercises.filter(e => e.muscle === muscle);
     if (exList.length === 0) continue;
-
+ 
     const enabledInGroup = exList.filter(e => state.enabled[e.id]).length;
-
+ 
     html += `
       <div class="muscle-section">
         <div class="muscle-section-header">
@@ -2247,11 +2247,11 @@ function renderExerciseList() {
       </div>
     `;
   }
-
+ 
   container.innerHTML = html || '<div class="empty-state"><div class="empty-state-icon">🏋️</div><p>No exercises found</p></div>';
   document.getElementById('enabled-count').textContent = enabledExercises().length;
 }
-
+ 
 function toggleExercise(id) {
   state.enabled[id] = !state.enabled[id];
   saveState();
@@ -2259,9 +2259,9 @@ function toggleExercise(id) {
   renderMuscleTabs();
   document.getElementById('enabled-count').textContent = enabledExercises().length;
 }
-
+ 
 // ─── MODAL ──────────────────────────────────────────────────────────────────
-
+ 
 function openAddModal() {
   modalMode = 'add';
   modalEditId = null;
@@ -2275,7 +2275,7 @@ function openAddModal() {
   document.getElementById('modal-save-btn').textContent = 'Add Exercise';
   document.getElementById('ex-modal').classList.add('open');
 }
-
+ 
 function openEditModal(id) {
   const ex = state.exercises.find(e => e.id === id);
   if (!ex) return;
@@ -2291,7 +2291,7 @@ function openEditModal(id) {
   document.getElementById('modal-save-btn').textContent = 'Save Changes';
   document.getElementById('ex-modal').classList.add('open');
 }
-
+ 
 function closeModal() {
   document.getElementById('ex-modal').classList.remove('open');
   // Reset delete button confirm state
@@ -2301,7 +2301,7 @@ function closeModal() {
   btn.style.background = '';
   btn.style.borderColor = '';
 }
-
+ 
 function saveModal() {
   const name = document.getElementById('modal-name').value.trim();
   if (!name) { toast('Please enter an exercise name'); return; }
@@ -2309,7 +2309,7 @@ function saveModal() {
   const equipment = document.getElementById('modal-equip').value.trim() || 'Custom';
   const sets = parseInt(document.getElementById('modal-sets').value) || 3;
   const duration = parseFloat(document.getElementById('modal-duration').value) || 2.5;
-
+ 
   if (modalMode === 'add') {
     const ex = { id: uid(), name, muscle, equipment, sets, duration };
     state.exercises.push(ex);
@@ -2320,12 +2320,12 @@ function saveModal() {
     if (ex) { ex.name = name; ex.muscle = muscle; ex.equipment = equipment; ex.sets = sets; ex.duration = duration; }
     toast('Exercise updated!');
   }
-
+ 
   saveState();
   closeModal();
   renderLibrary();
 }
-
+ 
 function deleteExerciseFromModal() {
   const btn = document.getElementById('modal-delete-btn');
   if (btn.dataset.confirming === 'true') {
@@ -2361,41 +2361,41 @@ function deleteExerciseFromModal() {
     }, 3000);
   }
 }
-
+ 
 function updateExerciseField(id, field, value) {
   const ex = state.exercises.find(e => e.id === id);
   if (!ex) return;
   ex[field] = value;
   saveState();
 }
-
+ 
 // ─── PLAN ───────────────────────────────────────────────────────────────────
-
+ 
 const MUSCLE_GROUPS = ['Chest','Back','Shoulders','Biceps','Triceps','Legs','Core','Glutes','Cardio'];
 const PLAN_MODES = [
   { id: 'any',       label: 'Any',               icon: '🎯', desc: 'Pick freely from selected muscles' },
   { id: 'similar',   label: 'Similar to Last',    icon: '🔄', desc: 'Same muscle groups as last session' },
   { id: 'different', label: 'Different from Last', icon: '⚡', desc: 'Avoid exercises done last session' },
 ];
-
+ 
 let selectedMuscles = [];   // muscle group names (independent of mode)
 let planMode = 'any';       // 'any' | 'similar' | 'different'
 let generatedPlan = null;
 let editingRoutine = [];
-
+ 
 function renderPlan() {
   renderMuscleChips();
   renderPlanModeChips();
   renderPlanContext();
 }
-
+ 
 function renderMuscleChips() {
   document.getElementById('muscle-chips').innerHTML = MUSCLE_GROUPS.map(m => `
     <div class="muscle-chip ${selectedMuscles.includes(m) ? 'selected' : ''}"
       onclick="toggleMuscleChip('${m}')">${m}</div>
   `).join('');
 }
-
+ 
 function renderPlanModeChips() {
   document.getElementById('plan-mode-chips').innerHTML = PLAN_MODES.map(p => `
     <div class="muscle-chip plan-mode-chip ${p.id === 'similar' ? 'similar' : p.id === 'different' ? 'different' : ''} ${planMode === p.id ? 'selected' : ''}"
@@ -2404,21 +2404,21 @@ function renderPlanModeChips() {
     </div>
   `).join('');
 }
-
+ 
 function renderPlanContext() {
   const ctx = document.getElementById('plan-context-area');
   const lastSession = state.sessions.length > 0 ? state.sessions[state.sessions.length - 1] : null;
-
+ 
   if (!lastSession || planMode === 'any') {
     ctx.innerHTML = '';
     return;
   }
-
+ 
   const exNames = lastSession.exerciseIds.map(id => {
     const e = state.exercises.find(x => x.id === id);
     return e ? e.name : '';
   }).filter(Boolean).slice(0, 5);
-
+ 
   const label = planMode === 'different' ? 'Avoiding exercises from' : 'Matching muscle groups of';
   ctx.innerHTML = `
     <div class="status-bar" style="margin-bottom:12px">
@@ -2428,7 +2428,7 @@ function renderPlanContext() {
       <span>${exNames.join(' · ')}${lastSession.exerciseIds.length > 5 ? ` +${lastSession.exerciseIds.length - 5} more` : ''}</span>
     </div>`;
 }
-
+ 
 function toggleMuscleChip(muscle) {
   if (selectedMuscles.includes(muscle)) {
     selectedMuscles = selectedMuscles.filter(m => m !== muscle);
@@ -2437,33 +2437,33 @@ function toggleMuscleChip(muscle) {
   }
   renderMuscleChips();
 }
-
+ 
 function selectPlanMode(mode) {
   planMode = mode;
   renderPlanModeChips();
   renderPlanContext();
 }
-
+ 
 function generatePlan() {
   const enabled = enabledExercises();
   if (enabled.length === 0) {
     toast('Enable exercises in the Library first!');
     return;
   }
-
+ 
   const targetMins = parseInt(document.getElementById('available-time').value) || 60;
   const lastSession = state.sessions.length > 0 ? state.sessions[state.sessions.length - 1] : null;
-
+ 
   // ── Step 1: filter by selected muscle groups ──
   let pool = selectedMuscles.length > 0
     ? enabled.filter(e => selectedMuscles.includes(e.muscle))
     : [...enabled];
-
+ 
   if (pool.length === 0) {
     toast('No enabled exercises for the selected muscle groups. Enable some in Library.');
     return;
   }
-
+ 
   // ── Step 2: apply mode filter on top of muscle filter ──
   if (planMode === 'similar') {
     if (!lastSession) {
@@ -2475,14 +2475,14 @@ function generatePlan() {
       const e = state.exercises.find(x => x.id === id);
       return e ? e.muscle : null;
     }).filter(Boolean))];
-
+ 
     const filtered = pool.filter(e => lastMuscles.includes(e.muscle));
     if (filtered.length === 0) {
       toast('No exercises match last session\'s muscle groups within your selection. Try "Any" mode.');
       return;
     }
     pool = filtered;
-
+ 
   } else if (planMode === 'different') {
     if (!lastSession) {
       toast('No previous session found. Save a session first or switch to Any mode.');
@@ -2494,10 +2494,10 @@ function generatePlan() {
     // Graceful fallback: if < 2 remain, use full muscle-filtered pool
     pool = filtered.length >= 2 ? filtered : pool;
   }
-
+ 
   // ── Step 3: shuffle and greedy fill ──
   pool = pool.sort(() => Math.random() - 0.5);
-
+ 
   let selected = [];
   let usedMins = 0;
   for (const ex of pool) {
@@ -2507,23 +2507,23 @@ function generatePlan() {
       usedMins += exMins;
     }
   }
-
+ 
   if (selected.length === 0) {
     toast('No exercises fit within the time. Try more time or enable more exercises.');
     return;
   }
-
+ 
   generatedPlan = { exercises: selected, totalMins: usedMins };
   renderGeneratedPlan();
 }
-
+ 
 function renderGeneratedPlan() {
   if (!generatedPlan) return;
   const { exercises } = generatedPlan;
   const totalSets = exercises.reduce((sum, ex) => sum + (ex.sets || 3), 0);
   const exactTotal = exercises.reduce((sum, ex) => sum + (ex.sets || 3) * (ex.duration || 2), 0);
   const fmtN = n => n % 1 === 0 ? n : n.toFixed(1);
-
+ 
   document.getElementById('plan-output').innerHTML = `
     <div class="plan-summary">
       <div><div class="plan-stat-num">${exercises.length}</div><div class="plan-stat-label">Exercises</div></div>
@@ -2542,7 +2542,7 @@ function renderGeneratedPlan() {
     </div>
   `;
 }
-
+ 
 function renderRoutineRows(exercises) {
   const fmtN = n => n % 1 === 0 ? n : n.toFixed(1);
   return exercises.map((ex, i) => {
@@ -2565,7 +2565,7 @@ function renderRoutineRows(exercises) {
       </div>`;
   }).join('');
 }
-
+ 
 function savePlanAsSession() {
   if (!generatedPlan) { toast('Generate a plan first!'); return; }
   const exactTotal = generatedPlan.exercises.reduce((sum, ex) => sum + (ex.sets || 3) * (ex.duration || 2), 0);
@@ -2580,9 +2580,9 @@ function savePlanAsSession() {
   saveState();
   toast('Session saved to history!');
 }
-
+ 
 // ─── ROUTINE EDIT MODAL ─────────────────────────────────────────────────────
-
+ 
 function openRoutineEditModal() {
   if (!generatedPlan) return;
   editingRoutine = generatedPlan.exercises.map(e => ({ ...e }));
@@ -2590,11 +2590,11 @@ function openRoutineEditModal() {
   populateRoutineAddSelect();
   document.getElementById('routine-edit-modal').classList.add('open');
 }
-
+ 
 function closeRoutineModal() {
   document.getElementById('routine-edit-modal').classList.remove('open');
 }
-
+ 
 function renderRoutineEditList() {
   const fmtN = n => n % 1 === 0 ? n : n.toFixed(1);
   const total = editingRoutine.reduce((s, ex) => s + (ex.sets||3)*(ex.duration||2), 0);
@@ -2624,18 +2624,18 @@ function renderRoutineEditList() {
   `;
   initDragSort();
 }
-
+ 
 // ── Drag-and-drop sort (mouse + touch) ──────────────────────────────────────
-
+ 
 let dragSrc = null;       // element being dragged
 let dragSrcIdx = null;
 let touchDragEl = null;   // floating clone for touch
 let touchOffsetX = 0;
 let touchOffsetY = 0;
-
+ 
 function initDragSort() {
   const items = document.querySelectorAll('.drag-item');
-
+ 
   items.forEach(item => {
     // ── Mouse / HTML5 drag ──
     item.addEventListener('dragstart', e => {
@@ -2644,7 +2644,7 @@ function initDragSort() {
       item.style.opacity = '0.4';
       e.dataTransfer.effectAllowed = 'move';
     });
-
+ 
     item.addEventListener('dragend', () => {
       item.style.opacity = '1';
       document.querySelectorAll('.drag-item').forEach(el => {
@@ -2653,7 +2653,7 @@ function initDragSort() {
       });
       dragSrc = null;
     });
-
+ 
     item.addEventListener('dragover', e => {
       e.preventDefault();
       e.dataTransfer.dropEffect = 'move';
@@ -2662,12 +2662,12 @@ function initDragSort() {
         item.style.background = 'rgba(232,255,71,0.06)';
       }
     });
-
+ 
     item.addEventListener('dragleave', () => {
       item.style.borderColor = 'transparent';
       item.style.background = 'var(--surface2)';
     });
-
+ 
     item.addEventListener('drop', e => {
       e.preventDefault();
       const targetIdx = parseInt(item.dataset.idx);
@@ -2677,23 +2677,23 @@ function initDragSort() {
       renderRoutineEditList();
       populateRoutineAddSelect();
     });
-
+ 
     // ── Touch drag ──
     item.addEventListener('touchstart', touchStart, { passive: false });
     item.addEventListener('touchmove', touchMove, { passive: false });
     item.addEventListener('touchend', touchEnd);
   });
 }
-
+ 
 function touchStart(e) {
   const item = e.currentTarget;
   dragSrcIdx = parseInt(item.dataset.idx);
-
+ 
   const touch = e.touches[0];
   const rect = item.getBoundingClientRect();
   touchOffsetX = touch.clientX - rect.left;
   touchOffsetY = touch.clientY - rect.top;
-
+ 
   // Create floating clone
   touchDragEl = item.cloneNode(true);
   touchDragEl.style.cssText = `
@@ -2713,45 +2713,45 @@ function touchStart(e) {
   document.body.appendChild(touchDragEl);
   item.style.opacity = '0.3';
 }
-
+ 
 function touchMove(e) {
   e.preventDefault();
   if (!touchDragEl) return;
   const touch = e.touches[0];
-
+ 
   touchDragEl.style.left = (touch.clientX - touchOffsetX) + 'px';
   touchDragEl.style.top  = (touch.clientY - touchOffsetY) + 'px';
-
+ 
   // Highlight the item under the finger
   touchDragEl.style.display = 'none';
   const under = document.elementFromPoint(touch.clientX, touch.clientY);
   touchDragEl.style.display = '';
-
+ 
   document.querySelectorAll('.drag-item').forEach(el => {
     el.style.borderColor = 'transparent';
     el.style.background = 'var(--surface2)';
   });
-
+ 
   const hovered = under && under.closest('.drag-item');
   if (hovered && parseInt(hovered.dataset.idx) !== dragSrcIdx) {
     hovered.style.borderColor = 'var(--accent)';
     hovered.style.background = 'rgba(232,255,71,0.06)';
   }
 }
-
+ 
 function touchEnd(e) {
   if (touchDragEl) {
     document.body.removeChild(touchDragEl);
     touchDragEl = null;
   }
-
+ 
   const item = e.currentTarget;
   item.style.opacity = '1';
-
+ 
   const touch = e.changedTouches[0];
   const under = document.elementFromPoint(touch.clientX, touch.clientY);
   const target = under && under.closest('.drag-item');
-
+ 
   if (target) {
     const targetIdx = parseInt(target.dataset.idx);
     if (targetIdx !== dragSrcIdx && dragSrcIdx !== null) {
@@ -2762,16 +2762,16 @@ function touchEnd(e) {
       return;
     }
   }
-
+ 
   // Reset highlights if no drop
   document.querySelectorAll('.drag-item').forEach(el => {
     el.style.borderColor = 'transparent';
     el.style.background = 'var(--surface2)';
   });
-
+ 
   dragSrcIdx = null;
 }
-
+ 
 function populateRoutineAddSelect() {
   const enabled = enabledExercises();
   const inRoutineIds = new Set(editingRoutine.map(e => e.id));
@@ -2785,13 +2785,13 @@ function populateRoutineAddSelect() {
     ).join('');
   }
 }
-
+ 
 function removeRoutineEx(idx) {
   editingRoutine.splice(idx, 1);
   renderRoutineEditList();
   populateRoutineAddSelect();
 }
-
+ 
 function addExerciseToRoutine() {
   const sel = document.getElementById('routine-add-select');
   const id = sel.value;
@@ -2802,7 +2802,7 @@ function addExerciseToRoutine() {
   renderRoutineEditList();
   populateRoutineAddSelect();
 }
-
+ 
 function applyRoutineEdits() {
   if (editingRoutine.length === 0) {
     toast('Routine must have at least one exercise.');
@@ -2814,24 +2814,24 @@ function applyRoutineEdits() {
   renderGeneratedPlan();
   toast('Routine updated!');
 }
-
+ 
 // ─── HISTORY ────────────────────────────────────────────────────────────────
-
+ 
 const DIFFICULTY_LABELS = {
   1: 'Very Easy', 2: 'Easy', 3: 'Fairly Easy', 4: 'Moderate',
   5: 'Challenging', 6: 'Hard', 7: 'Very Hard', 8: 'Intense',
   9: 'Brutal', 10: 'Max Effort'
 };
-
+ 
 const DIFFICULTY_COLORS = {
   1:'#47ffb8', 2:'#47ffb8', 3:'#a8ff47', 4:'#e8ff47',
   5:'#e8ff47', 6:'#ffcc47', 7:'#ff9147', 8:'#ff6b35',
   9:'#ff4747', 10:'#ff1111'
 };
-
+ 
 let feedbackSessionId = null;
 let feedbackDifficulty = null;
-
+ 
 function renderHistory() {
   const area = document.getElementById('history-area');
   if (state.sessions.length === 0) {
@@ -2841,7 +2841,7 @@ function renderHistory() {
     </div>`;
     return;
   }
-
+ 
   const sorted = [...state.sessions].reverse();
   area.innerHTML = sorted.map((s, idx) => {
     const exNames = s.exerciseIds.map(id => {
@@ -2852,10 +2852,10 @@ function renderHistory() {
       const e = state.exercises.find(x => x.id === id);
       return e ? e.muscle : null;
     }).filter(Boolean))];
-
+ 
     const hasFeedback = s.difficulty || s.remarks;
     const diffColor = s.difficulty ? DIFFICULTY_COLORS[s.difficulty] : 'var(--text3)';
-
+ 
     return `
       <div class="session-card">
         <div class="session-header">
@@ -2896,7 +2896,7 @@ function renderHistory() {
     `;
   }).join('');
 }
-
+ 
 function deleteSession(sessionId) {
   const btn = document.querySelector(`[data-del-session="${sessionId}"]`) || null;
   // Use a keyed confirmation on the state object itself to avoid confirm()
@@ -2920,48 +2920,48 @@ function deleteSession(sessionId) {
     }, 3000);
   }
 }
-
+ 
 function openFeedbackModal(sessionId) {
   feedbackSessionId = sessionId;
   feedbackDifficulty = null;
   const s = state.sessions.find(x => x.id === sessionId);
   if (!s) return;
-
+ 
   // Pre-fill if existing feedback
   feedbackDifficulty = s.difficulty || null;
   document.getElementById('remarks-input').value = s.remarks || '';
-
+ 
   // Render difficulty picker
   renderDifficultyPicker();
-
+ 
   document.getElementById('feedback-modal').classList.add('open');
 }
-
+ 
 function renderDifficultyPicker() {
   document.getElementById('difficulty-picker').innerHTML = [1,2,3,4,5,6,7,8,9,10].map(n => `
     <button class="diff-btn ${feedbackDifficulty === n ? 'selected' : ''}"
       style="${feedbackDifficulty === n ? `background:${DIFFICULTY_COLORS[n]};border-color:${DIFFICULTY_COLORS[n]}` : ''}"
       onclick="selectDifficulty(${n})">${n}</button>
   `).join('');
-
+ 
   const lbl = document.getElementById('difficulty-label');
   lbl.textContent = feedbackDifficulty
     ? `${feedbackDifficulty}/10 — ${DIFFICULTY_LABELS[feedbackDifficulty]}`
     : 'Tap a number to rate';
   lbl.style.color = feedbackDifficulty ? DIFFICULTY_COLORS[feedbackDifficulty] : 'var(--text3)';
 }
-
+ 
 function selectDifficulty(n) {
   feedbackDifficulty = feedbackDifficulty === n ? null : n; // toggle off if tapping same
   renderDifficultyPicker();
 }
-
+ 
 function closeFeedbackModal() {
   document.getElementById('feedback-modal').classList.remove('open');
   feedbackSessionId = null;
   feedbackDifficulty = null;
 }
-
+ 
 function saveFeedback() {
   if (!feedbackSessionId) return;
   const s = state.sessions.find(x => x.id === feedbackSessionId);
@@ -2973,20 +2973,20 @@ function saveFeedback() {
   renderHistory();
   toast('Feedback saved!');
 }
-
-
+ 
+ 
 // ─── TIMETABLE ───────────────────────────────────────────────────────────────
-
+ 
 const TT_MUSCLES = ['Chest','Back','Shoulders','Biceps','Triceps','Legs','Core','Glutes','Cardio'];
-
+ 
 let ttConfig = null;      // loaded from DB
 let ttMuscles = [];       // selected muscle filter
 let ttWorkouts = [];      // scheduled_workouts rows
-
+ 
 // ── Load config & workouts from Supabase ─────────────────────────────────────
 async function loadTimetable() {
   if (!sbClient || !currentUser) return;
-
+ 
   const [cfgRes, workRes] = await Promise.all([
     sbClient.from('timetable_config')
       .select('*')
@@ -2998,18 +2998,18 @@ async function loadTimetable() {
       .order('scheduled_date', { ascending: false })
       .limit(20),
   ]);
-
+ 
   ttConfig = cfgRes.data || null;
   ttWorkouts = workRes.data || [];
   ttMuscles = (ttConfig?.muscle_groups) || [];
 }
-
+ 
 // ── Save config to Supabase ───────────────────────────────────────────────────
 async function saveTimetableConfig() {
   if (!sbClient || !currentUser) return;
   const freq = parseInt(document.getElementById('tt-frequency')?.value) || 2;
   const dur  = parseInt(document.getElementById('tt-duration')?.value) || 60;
-
+ 
   const payload = {
     user_id: currentUser.id,
     enabled: ttConfig?.enabled ?? false,
@@ -3017,21 +3017,21 @@ async function saveTimetableConfig() {
     duration_mins: dur,
     muscle_groups: ttMuscles,
   };
-
+ 
   const { data, error } = await sbClient.from('timetable_config')
     .upsert(payload, { onConflict: 'user_id' })
     .select()
     .single();
-
+ 
   if (!error) { ttConfig = data; toast('Timetable preferences saved!'); }
   else toast('Error saving timetable: ' + error.message);
 }
-
+ 
 // ── Toggle auto-schedule on/off ───────────────────────────────────────────────
 async function toggleTimetable() {
   if (!sbClient || !currentUser) return;
   const newEnabled = !(ttConfig?.enabled ?? false);
-
+ 
   const payload = {
     user_id: currentUser.id,
     enabled: newEnabled,
@@ -3039,30 +3039,30 @@ async function toggleTimetable() {
     duration_mins:  parseInt(document.getElementById('tt-duration')?.value) || 60,
     muscle_groups: ttMuscles,
   };
-
+ 
   const { data, error } = await sbClient.from('timetable_config')
     .upsert(payload, { onConflict: 'user_id' })
     .select()
     .single();
-
+ 
   if (!error) {
     ttConfig = data;
     toast(newEnabled ? '✓ Auto-schedule enabled!' : 'Auto-schedule paused');
     renderTimetable();
   } else toast('Error: ' + error.message);
 }
-
+ 
 // ── Mark workout complete ────────────────────────────────────────────────────
 async function markWorkoutComplete(workoutId) {
   if (!sbClient || !currentUser) return;
   const btn = document.getElementById('btn-complete-' + workoutId);
   if (btn) { btn.textContent = 'Saving…'; btn.disabled = true; }
-
+ 
   const { error } = await sbClient.from('scheduled_workouts')
     .update({ status: 'completed', completed_at: new Date().toISOString() })
     .eq('id', workoutId)
     .eq('user_id', currentUser.id);
-
+ 
   if (!error) {
     // Update local list
     const w = ttWorkouts.find(x => x.id === workoutId);
@@ -3074,7 +3074,7 @@ async function markWorkoutComplete(workoutId) {
     toast('Error: ' + error.message);
   }
 }
-
+ 
 // ── Toggle muscle chip ────────────────────────────────────────────────────────
 function toggleTTMuscle(m) {
   if (ttMuscles.includes(m)) {
@@ -3085,13 +3085,13 @@ function toggleTTMuscle(m) {
   renderTTMuscleChips();
   saveTimetableConfig();
 }
-
+ 
 // ── Render functions ──────────────────────────────────────────────────────────
 async function renderTimetable() {
   if (!ttConfig && sbClient && currentUser) await loadTimetable();
-
+ 
   const enabled = ttConfig?.enabled ?? false;
-
+ 
   // Toggle knob
   const toggle = document.getElementById('tt-toggle');
   const knob   = document.getElementById('tt-toggle-knob');
@@ -3101,7 +3101,7 @@ async function renderTimetable() {
     knob.style.background = enabled ? 'var(--accent)' : 'var(--text3)';
     knob.style.transform = enabled ? 'translateX(24px)' : 'translateX(0)';
   }
-
+ 
   // Pre-fill config inputs
   if (ttConfig) {
     const freqEl = document.getElementById('tt-frequency');
@@ -3109,11 +3109,11 @@ async function renderTimetable() {
     if (freqEl) freqEl.value = ttConfig.frequency_days;
     if (durEl)  durEl.value  = ttConfig.duration_mins;
   }
-
+ 
   renderTTMuscleChips();
   renderTTWorkouts();
 }
-
+ 
 function renderTTMuscleChips() {
   const el = document.getElementById('tt-muscle-chips');
   if (!el) return;
@@ -3122,13 +3122,13 @@ function renderTTMuscleChips() {
       onclick="toggleTTMuscle('${m}')">${m}</div>
   `).join('');
 }
-
+ 
 function renderTTWorkouts() {
   const area = document.getElementById('tt-history-area');
   if (!area) return;
-
+ 
   const todayUTC = new Date().toISOString().slice(0, 10);
-
+ 
   if (ttWorkouts.length === 0) {
     const enabled = ttConfig?.enabled ?? false;
     area.innerHTML = `
@@ -3142,12 +3142,12 @@ function renderTTWorkouts() {
       </div>`;
     return;
   }
-
+ 
   const pending   = ttWorkouts.filter(w => w.status === 'pending');
   const completed = ttWorkouts.filter(w => w.status === 'completed');
-
+ 
   let html = '';
-
+ 
   // ── Pending / upcoming ──
   if (pending.length > 0) {
     html += `<div class="settings-label" style="margin:20px 0 10px">Pending Workouts</div>`;
@@ -3158,7 +3158,7 @@ function renderTTWorkouts() {
       const statusColor = isToday ? 'var(--accent)' : isPast ? 'var(--danger)' : 'var(--text3)';
       const exs = (w.exercise_snapshot || []) as any[];
       const muscles = [...new Set(exs.map((e:any) => e.muscle))].join(', ');
-
+ 
       html += `
         <div class="tt-workout-card ${isToday ? 'is-today' : ''}">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
@@ -3186,7 +3186,7 @@ function renderTTWorkouts() {
         </div>`;
     });
   }
-
+ 
   // ── Completed ──
   if (completed.length > 0) {
     html += `<div class="settings-label" style="margin:20px 0 10px">Completed Workouts</div>`;
@@ -3206,18 +3206,18 @@ function renderTTWorkouts() {
         </div>`;
     });
   }
-
+ 
   area.innerHTML = html;
 }
-
+ 
 function fmtDate(dateStr) {
   return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-GB', {
     weekday: 'short', day: 'numeric', month: 'short', year: 'numeric'
   });
 }
-
+ 
 // ─── INIT ───────────────────────────────────────────────────────────────────
-
+ 
 initApp();
 </script>
 </body>

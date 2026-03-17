@@ -1797,40 +1797,41 @@ async function _hasUserRecord() {
 async function loadUserData() {
   if (!sbClient || !currentUser) return null;
 
-  // Use a fresh authenticated client built directly from the current session token.
-  // This guarantees the Authorization header is set — avoids the race where
-  // the shared sbClient hasn't attached the JWT yet and .single() hangs silently.
+  // Directly use the REST API with the current session token.
+  // Avoids creating a new Supabase client (which triggers SIGNED_IN events → infinite loop).
   const { data: { session } } = await sbClient.auth.getSession();
   const accessToken = session?.access_token;
   if (!accessToken) {
-    console.error('loadUserData: no access token available');
-    return null;
+    console.error('loadUserData: no access token');
+    return _loadFromCache();
   }
 
-  // Race the DB fetch against a 10s timeout
-  const fetchPromise = window.supabase
-    .createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      global: { headers: { Authorization: 'Bearer ' + accessToken } }
-    })
-    .from('user_data')
-    .select('exercises, enabled, sessions, next_id, username, created_at, deleted_defaults')
-    .eq('user_id', currentUser.id)
-    .maybeSingle();
-
-  const timeoutPromise = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error('loadUserData timed out after 10s')), 10000)
-  );
-
   try {
-    const { data, error } = await Promise.race([fetchPromise, timeoutPromise]);
+    const url = SUPABASE_URL + '/rest/v1/user_data'
+      + '?select=exercises,enabled,sessions,next_id,username,created_at,deleted_defaults'
+      + '&user_id=eq.' + currentUser.id
+      + '&limit=1';
 
-    if (error) {
-      console.error('loadUserData error:', error.message, error.code);
-      // Fall back to local cache on error
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+
+    const resp = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + accessToken,
+        'Accept': 'application/json',
+      }
+    });
+    clearTimeout(timeout);
+
+    if (!resp.ok) {
+      console.error('loadUserData HTTP error:', resp.status);
       return _loadFromCache();
     }
-    if (data) return data;
-    return null; // No row yet (new user)
+
+    const rows = await resp.json();
+    return rows.length > 0 ? rows[0] : null;
 
   } catch (e) {
     console.error('loadUserData exception:', e.message);

@@ -114,6 +114,7 @@ async function testFullEnterApp() {
 
 // ── Auth state ────────────────────────────────────────────────────────────────
 let currentUserId = null;
+let authHandled = false; // prevent infinite loop from multiple SIGNED_IN events
 log('Waiting for onAuthStateChange...', 'wait');
 
 const timer = setTimeout(() => log('TIMEOUT: onAuthStateChange never fired!', 'err'), 10000);
@@ -122,6 +123,9 @@ sb.auth.onAuthStateChange(async (event, session) => {
   clearTimeout(timer);
   log('onAuthStateChange: event=' + event + ' session=' + (session ? 'YES uid='+session.user.id : 'NULL'),
       session ? 'ok' : 'info');
+
+  if (authHandled) { log('(duplicate event ignored — auth already handled)', 'wait'); return; }
+  authHandled = true;
 
   if (!session) {
     log('No session — you need to log in on the main app first, then come back here', 'err');
@@ -137,25 +141,27 @@ sb.auth.onAuthStateChange(async (event, session) => {
     const accessToken = session.access_token;
     log('Access token present: ' + !!accessToken, accessToken ? 'ok' : 'err');
 
-    const authedClient = window.supabase.createClient(SB_URL, SB_KEY, {
-      global: { headers: { Authorization: 'Bearer ' + accessToken } }
+    const url = SB_URL + '/rest/v1/user_data'
+      + '?select=exercises,enabled,sessions,next_id,username,created_at,deleted_defaults'
+      + '&user_id=eq.' + currentUserId + '&limit=1';
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+
+    const resp = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': 'Bearer ' + accessToken,
+        'Accept': 'application/json',
+      }
     });
+    clearTimeout(timeout);
 
-    const fetchPromise = authedClient.from('user_data')
-      .select('exercises, enabled, sessions, next_id, username, created_at, deleted_defaults')
-      .eq('user_id', currentUserId)
-      .maybeSingle();
+    if (!resp.ok) { log('HTTP error: ' + resp.status, 'err'); return; }
+    const rows = await resp.json();
+    const data = rows[0] || null;
 
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('TIMED OUT after 10s')), 10000)
-    );
-
-    const { data, error } = await Promise.race([fetchPromise, timeoutPromise]);
-
-    if (error) {
-      log('user_data ERROR: ' + error.message + ' | code: ' + error.code, 'err');
-      return;
-    }
     if (!data) {
       log('user_data: NO ROW found — new user or RLS blocking', 'err');
       return;

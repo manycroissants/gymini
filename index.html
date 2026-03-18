@@ -3195,8 +3195,8 @@ function renderTTWorkouts() {
       const isPast  = w.scheduled_date < todayUTC;
       const dateLabel = isToday ? 'Today' : isPast ? `Overdue · ${fmtDate(w.scheduled_date)}` : fmtDate(w.scheduled_date);
       const statusColor = isToday ? 'var(--accent)' : isPast ? 'var(--danger)' : 'var(--text3)';
-      const exs = (w.exercise_snapshot || []) as any[];
-      const muscles = [...new Set(exs.map((e:any) => e.muscle))].join(', ');
+      const exs = (w.exercise_snapshot || []);
+      const muscles = [...new Set(exs.map(e => e.muscle))].join(', ');
 
       html += `
         <div class="tt-workout-card ${isToday ? 'is-today' : ''}">
@@ -3213,7 +3213,7 @@ function renderTTWorkouts() {
           </div>
           <div style="font-size:0.78rem;color:var(--text2)">${exs.length} exercises · ${w.total_mins} min · ${muscles}</div>
           <div class="tt-ex-pills">
-            ${exs.map((e:any) => `<span class="tt-ex-pill">${e.name}</span>`).join('')}
+            ${exs.map(e => `<span class="tt-ex-pill">${e.name}</span>`).join('')}
           </div>
           ${(isToday || isPast)
             ? `<div style="margin-top:14px">
@@ -3230,7 +3230,7 @@ function renderTTWorkouts() {
   if (completed.length > 0) {
     html += `<div class="settings-label" style="margin:20px 0 10px">Completed Workouts</div>`;
     completed.forEach(w => {
-      const exs = (w.exercise_snapshot || []) as any[];
+      const exs = (w.exercise_snapshot || []);
       html += `
         <div class="tt-workout-card is-completed">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
@@ -3239,7 +3239,7 @@ function renderTTWorkouts() {
           </div>
           <div style="font-size:0.78rem;color:var(--text2)">${exs.length} exercises · ${w.total_mins} min</div>
           <div class="tt-ex-pills">
-            ${exs.slice(0,5).map((e:any) => `<span class="tt-ex-pill">${e.name}</span>`).join('')}
+            ${exs.slice(0,5).map(e => `<span class="tt-ex-pill">${e.name}</span>`).join('')}
             ${exs.length > 5 ? `<span class="tt-ex-pill">+${exs.length-5} more</span>` : ''}
           </div>
         </div>`;
